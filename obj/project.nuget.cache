@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "++qGzXqWA6LhL8PpHS2MEM1s5VuF51nviJzthioXSVN1XejnOgjE8HAwhjEF/6NOviHnT4MB1+VkpSJHrWnTOA==",
+  "success": true,
+  "projectFilePath": "/Users/joel/code/fs/sample1/MyFSharpApp/MyFSharpApp.fsproj",
+  "expectedPackageFiles": [
+    "/Users/joel/.nuget/packages/fsharp.core/6.0.4/fsharp.core.6.0.4.nupkg.sha512"
+  ],
+  "logs": []
+}
