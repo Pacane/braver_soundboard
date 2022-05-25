@@ -1,26 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "/Users/joel/code/fs/sample1/MyFSharpApp/MyFSharpApp.fsproj": {}
+    "/home/joel/code/fsharp/braver_soundboard/MyFSharpApp.fsproj": {}
   },
   "projects": {
-    "/Users/joel/code/fs/sample1/MyFSharpApp/MyFSharpApp.fsproj": {
+    "/home/joel/code/fsharp/braver_soundboard/MyFSharpApp.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/joel/code/fs/sample1/MyFSharpApp/MyFSharpApp.fsproj",
+        "projectUniqueName": "/home/joel/code/fsharp/braver_soundboard/MyFSharpApp.fsproj",
         "projectName": "MyFSharpApp",
-        "projectPath": "/Users/joel/code/fs/sample1/MyFSharpApp/MyFSharpApp.fsproj",
-        "packagesPath": "/Users/joel/.nuget/packages/",
-        "outputPath": "/Users/joel/code/fs/sample1/MyFSharpApp/obj/",
+        "projectPath": "/home/joel/code/fsharp/braver_soundboard/MyFSharpApp.fsproj",
+        "packagesPath": "/home/joel/.nuget/packages/",
+        "outputPath": "/home/joel/code/fsharp/braver_soundboard/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/joel/.nuget/NuGet/NuGet.Config"
+          "/home/joel/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/sdk/6.0.300/FSharp/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -143,12 +142,18 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[6.0.2, 6.0.2]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.300/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/6.0.102/RuntimeIdentifierGraph.json"
         }
       }
     }
