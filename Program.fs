@@ -30,10 +30,10 @@ let sendAsync (client: IAudioClient, path) =
         use output = ffmpeg.StandardOutput.BaseStream
         use discord = client.CreatePCMStream AudioApplication.Mixed
 
-        ignore
-        <| match ffmpeg.ExitCode with
-           | 1 -> printfn "Something wrong happened with ffmpeg: %s" (ffmpeg.StandardOutput.ToString())
-           | _ -> ()
+        do
+            match ffmpeg.ExitCode with
+            | 1 -> printfn "Something wrong happened with ffmpeg: %s" (ffmpeg.StandardOutput.ToString())
+            | _ -> ()
 
         do! output.CopyToAsync(discord)
         do! discord.FlushAsync()
