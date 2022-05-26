@@ -18,7 +18,7 @@ let createStream path =
             FileName = "ffmpeg",
             //Arguments = $"-hide_banner -loglevel panic -i \"{path}\" -ac 2 -f s16le -ar 44100 pipe:1",
             Arguments =
-                $"-hide_banner -loglevel panic -c:a libvorbis -i \"{path}\" -ac 2 -f s16le -ar 44000 -filter:a \"volume=20dB\" pipe:1",
+                $"-hide_banner -loglevel panic -c:a libvorbis -i \"{path}\" -ac 2 -f s16le -ar 48000 -filter:a \"volume=20dB\" pipe:1",
             UseShellExecute = false,
             RedirectStandardOutput = true
         )
