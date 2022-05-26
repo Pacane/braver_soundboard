@@ -16,7 +16,7 @@ let createStream path =
     Process.Start(
         ProcessStartInfo(
             FileName = "ffmpeg",
-            //Arguments = $"-hide_banner -loglevel panic -i \"{path}\" -ac 2 -f s16le -ar 44000 pipe:1",
+            //Arguments = $"-hide_banner -loglevel panic -i \"{path}\" -ac 2 -f s16le -ar 44100 pipe:1",
             Arguments = $"-hide_banner -loglevel panic -c:a libvorbis -i \"{path}\" -ac 2 -f s16le -ar 44000 pipe:1",
             UseShellExecute = false,
             RedirectStandardOutput = true
@@ -52,7 +52,7 @@ type SoundModule() =
             let voiceChannel = guildUser.VoiceChannel
 
             let! connection = voiceChannel.ConnectAsync()
-            do! sendAsync (connection, "aucun_respect.ogg")
+            do! sendAsync (connection, $"{clipName}.ogg")
             do! connection.StopAsync()
         }
 
