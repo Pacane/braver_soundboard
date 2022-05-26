@@ -17,7 +17,8 @@ let createStream path =
         ProcessStartInfo(
             FileName = "ffmpeg",
             //Arguments = $"-hide_banner -loglevel panic -i \"{path}\" -ac 2 -f s16le -ar 44100 pipe:1",
-            Arguments = $"-hide_banner -loglevel panic -c:a libvorbis -i \"{path}\" -ac 2 -f s16le -ar 44000 -filter:a \"volume=20dB\" pipe:1",
+            Arguments =
+                $"-hide_banner -loglevel panic -c:a libvorbis -i \"{path}\" -ac 2 -f s16le -ar 44000 -filter:a \"volume=20dB\" pipe:1",
             UseShellExecute = false,
             RedirectStandardOutput = true
         )
@@ -29,10 +30,11 @@ let sendAsync (client: IAudioClient, path) =
         use output = ffmpeg.StandardOutput.BaseStream
         use discord = client.CreatePCMStream AudioApplication.Mixed
 
-        match ffmpeg.ExitCode with
-        | 1 -> printfn "Something wrong happened with ffmpeg: %s" (ffmpeg.StandardOutput.ToString())
-        | _ -> ()
-        
+        ignore
+        <| match ffmpeg.ExitCode with
+           | 1 -> printfn "Something wrong happened with ffmpeg: %s" (ffmpeg.StandardOutput.ToString())
+           | _ -> ()
+
         do! output.CopyToAsync(discord)
         do! discord.FlushAsync()
     }
