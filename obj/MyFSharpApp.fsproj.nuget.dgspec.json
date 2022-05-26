@@ -1,25 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "/home/joel/code/fsharp/braver_soundboard/MyFSharpApp.fsproj": {}
+    "/Users/joel/code/fs/sample1/MyFSharpApp/MyFSharpApp.fsproj": {}
   },
   "projects": {
-    "/home/joel/code/fsharp/braver_soundboard/MyFSharpApp.fsproj": {
+    "/Users/joel/code/fs/sample1/MyFSharpApp/MyFSharpApp.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/joel/code/fsharp/braver_soundboard/MyFSharpApp.fsproj",
+        "projectUniqueName": "/Users/joel/code/fs/sample1/MyFSharpApp/MyFSharpApp.fsproj",
         "projectName": "MyFSharpApp",
-        "projectPath": "/home/joel/code/fsharp/braver_soundboard/MyFSharpApp.fsproj",
-        "packagesPath": "/home/joel/.nuget/packages/",
-        "outputPath": "/home/joel/code/fsharp/braver_soundboard/obj/",
+        "projectPath": "/Users/joel/code/fs/sample1/MyFSharpApp/MyFSharpApp.fsproj",
+        "packagesPath": "/Users/joel/.nuget/packages/",
+        "outputPath": "/Users/joel/code/fs/sample1/MyFSharpApp/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/joel/.nuget/NuGet/NuGet.Config"
+          "/Users/joel/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
+          "/usr/local/share/dotnet/sdk/6.0.300/FSharp/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -43,37 +44,37 @@
           "dependencies": {
             "Discord.Net": {
               "target": "Package",
-              "version": "[3.6.1, )",
+              "version": "[3.7.0, )",
               "generatePathProperty": true
             },
             "Discord.Net.Commands": {
               "target": "Package",
-              "version": "[3.6.1, )",
+              "version": "[3.7.0, )",
               "generatePathProperty": true
             },
             "Discord.Net.Core": {
               "target": "Package",
-              "version": "[3.6.1, )",
+              "version": "[3.7.0, )",
               "generatePathProperty": true
             },
             "Discord.Net.Interactions": {
               "target": "Package",
-              "version": "[3.6.1, )",
+              "version": "[3.7.0, )",
               "generatePathProperty": true
             },
             "Discord.Net.Rest": {
               "target": "Package",
-              "version": "[3.6.1, )",
+              "version": "[3.7.0, )",
               "generatePathProperty": true
             },
             "Discord.Net.WebSocket": {
               "target": "Package",
-              "version": "[3.6.1, )",
+              "version": "[3.7.0, )",
               "generatePathProperty": true
             },
             "Discord.Net.Webhook": {
               "target": "Package",
-              "version": "[3.6.1, )",
+              "version": "[3.7.0, )",
               "generatePathProperty": true
             },
             "FSharp.Core": {
@@ -142,18 +143,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[6.0.2, 6.0.2]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/6.0.102/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.300/RuntimeIdentifierGraph.json"
         }
       }
     }

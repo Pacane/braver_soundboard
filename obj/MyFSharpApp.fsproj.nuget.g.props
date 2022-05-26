@@ -4,13 +4,13 @@
     <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
     <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
     <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
-    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">/home/joel/.nuget/packages/</NuGetPackageRoot>
-    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">/home/joel/.nuget/packages/</NuGetPackageFolders>
+    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">/Users/joel/.nuget/packages/</NuGetPackageRoot>
+    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">/Users/joel/.nuget/packages/</NuGetPackageFolders>
     <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
-    <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.0.0</NuGetToolVersion>
+    <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.2.0</NuGetToolVersion>
   </PropertyGroup>
   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <SourceRoot Include="/home/joel/.nuget/packages/" />
+    <SourceRoot Include="/Users/joel/.nuget/packages/" />
   </ItemGroup>
   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <None Include="$(NuGetPackageRoot)fsharp.core/6.0.4/contentFiles/any/netstandard2.1/FSharp.Core.xml" Condition="Exists('$(NuGetPackageRoot)fsharp.core/6.0.4/contentFiles/any/netstandard2.1/FSharp.Core.xml')">
@@ -25,23 +25,23 @@
     </None>
   </ItemGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <PkgSystem_ValueTuple Condition=" '$(PkgSystem_ValueTuple)' == '' ">/home/joel/.nuget/packages/system.valuetuple/4.5.0</PkgSystem_ValueTuple>
-    <PkgSystem_Runtime_CompilerServices_Unsafe Condition=" '$(PkgSystem_Runtime_CompilerServices_Unsafe)' == '' ">/home/joel/.nuget/packages/system.runtime.compilerservices.unsafe/6.0.0</PkgSystem_Runtime_CompilerServices_Unsafe>
-    <PkgSystem_Reactive Condition=" '$(PkgSystem_Reactive)' == '' ">/home/joel/.nuget/packages/system.reactive/5.0.0</PkgSystem_Reactive>
-    <PkgMicrosoft_Bcl_AsyncInterfaces Condition=" '$(PkgMicrosoft_Bcl_AsyncInterfaces)' == '' ">/home/joel/.nuget/packages/microsoft.bcl.asyncinterfaces/6.0.0</PkgMicrosoft_Bcl_AsyncInterfaces>
-    <PkgSystem_Linq_Async Condition=" '$(PkgSystem_Linq_Async)' == '' ">/home/joel/.nuget/packages/system.linq.async/6.0.1</PkgSystem_Linq_Async>
-    <PkgSystem_Interactive_Async Condition=" '$(PkgSystem_Interactive_Async)' == '' ">/home/joel/.nuget/packages/system.interactive.async/6.0.1</PkgSystem_Interactive_Async>
-    <PkgSystem_Collections_Immutable Condition=" '$(PkgSystem_Collections_Immutable)' == '' ">/home/joel/.nuget/packages/system.collections.immutable/6.0.0</PkgSystem_Collections_Immutable>
-    <PkgNewtonsoft_Json Condition=" '$(PkgNewtonsoft_Json)' == '' ">/home/joel/.nuget/packages/newtonsoft.json/13.0.1</PkgNewtonsoft_Json>
-    <PkgMicrosoft_Extensions_DependencyInjection_Abstractions Condition=" '$(PkgMicrosoft_Extensions_DependencyInjection_Abstractions)' == '' ">/home/joel/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/6.0.0</PkgMicrosoft_Extensions_DependencyInjection_Abstractions>
-    <PkgFSharp_Core Condition=" '$(PkgFSharp_Core)' == '' ">/home/joel/.nuget/packages/fsharp.core/6.0.4</PkgFSharp_Core>
-    <PkgFSharp_Data Condition=" '$(PkgFSharp_Data)' == '' ">/home/joel/.nuget/packages/fsharp.data/4.2.8</PkgFSharp_Data>
-    <PkgDiscord_Net_Core Condition=" '$(PkgDiscord_Net_Core)' == '' ">/home/joel/.nuget/packages/discord.net.core/3.6.1</PkgDiscord_Net_Core>
-    <PkgDiscord_Net_Rest Condition=" '$(PkgDiscord_Net_Rest)' == '' ">/home/joel/.nuget/packages/discord.net.rest/3.6.1</PkgDiscord_Net_Rest>
-    <PkgDiscord_Net_WebSocket Condition=" '$(PkgDiscord_Net_WebSocket)' == '' ">/home/joel/.nuget/packages/discord.net.websocket/3.6.1</PkgDiscord_Net_WebSocket>
-    <PkgDiscord_Net_Webhook Condition=" '$(PkgDiscord_Net_Webhook)' == '' ">/home/joel/.nuget/packages/discord.net.webhook/3.6.1</PkgDiscord_Net_Webhook>
-    <PkgDiscord_Net_Interactions Condition=" '$(PkgDiscord_Net_Interactions)' == '' ">/home/joel/.nuget/packages/discord.net.interactions/3.6.1</PkgDiscord_Net_Interactions>
-    <PkgDiscord_Net_Commands Condition=" '$(PkgDiscord_Net_Commands)' == '' ">/home/joel/.nuget/packages/discord.net.commands/3.6.1</PkgDiscord_Net_Commands>
-    <PkgDiscord_Net Condition=" '$(PkgDiscord_Net)' == '' ">/home/joel/.nuget/packages/discord.net/3.6.1</PkgDiscord_Net>
+    <PkgSystem_ValueTuple Condition=" '$(PkgSystem_ValueTuple)' == '' ">/Users/joel/.nuget/packages/system.valuetuple/4.5.0</PkgSystem_ValueTuple>
+    <PkgSystem_Runtime_CompilerServices_Unsafe Condition=" '$(PkgSystem_Runtime_CompilerServices_Unsafe)' == '' ">/Users/joel/.nuget/packages/system.runtime.compilerservices.unsafe/6.0.0</PkgSystem_Runtime_CompilerServices_Unsafe>
+    <PkgSystem_Reactive Condition=" '$(PkgSystem_Reactive)' == '' ">/Users/joel/.nuget/packages/system.reactive/5.0.0</PkgSystem_Reactive>
+    <PkgMicrosoft_Bcl_AsyncInterfaces Condition=" '$(PkgMicrosoft_Bcl_AsyncInterfaces)' == '' ">/Users/joel/.nuget/packages/microsoft.bcl.asyncinterfaces/6.0.0</PkgMicrosoft_Bcl_AsyncInterfaces>
+    <PkgSystem_Linq_Async Condition=" '$(PkgSystem_Linq_Async)' == '' ">/Users/joel/.nuget/packages/system.linq.async/6.0.1</PkgSystem_Linq_Async>
+    <PkgSystem_Interactive_Async Condition=" '$(PkgSystem_Interactive_Async)' == '' ">/Users/joel/.nuget/packages/system.interactive.async/6.0.1</PkgSystem_Interactive_Async>
+    <PkgSystem_Collections_Immutable Condition=" '$(PkgSystem_Collections_Immutable)' == '' ">/Users/joel/.nuget/packages/system.collections.immutable/6.0.0</PkgSystem_Collections_Immutable>
+    <PkgNewtonsoft_Json Condition=" '$(PkgNewtonsoft_Json)' == '' ">/Users/joel/.nuget/packages/newtonsoft.json/13.0.1</PkgNewtonsoft_Json>
+    <PkgMicrosoft_Extensions_DependencyInjection_Abstractions Condition=" '$(PkgMicrosoft_Extensions_DependencyInjection_Abstractions)' == '' ">/Users/joel/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/6.0.0</PkgMicrosoft_Extensions_DependencyInjection_Abstractions>
+    <PkgFSharp_Core Condition=" '$(PkgFSharp_Core)' == '' ">/Users/joel/.nuget/packages/fsharp.core/6.0.4</PkgFSharp_Core>
+    <PkgFSharp_Data Condition=" '$(PkgFSharp_Data)' == '' ">/Users/joel/.nuget/packages/fsharp.data/4.2.8</PkgFSharp_Data>
+    <PkgDiscord_Net_Core Condition=" '$(PkgDiscord_Net_Core)' == '' ">/Users/joel/.nuget/packages/discord.net.core/3.7.0</PkgDiscord_Net_Core>
+    <PkgDiscord_Net_Rest Condition=" '$(PkgDiscord_Net_Rest)' == '' ">/Users/joel/.nuget/packages/discord.net.rest/3.7.0</PkgDiscord_Net_Rest>
+    <PkgDiscord_Net_WebSocket Condition=" '$(PkgDiscord_Net_WebSocket)' == '' ">/Users/joel/.nuget/packages/discord.net.websocket/3.7.0</PkgDiscord_Net_WebSocket>
+    <PkgDiscord_Net_Webhook Condition=" '$(PkgDiscord_Net_Webhook)' == '' ">/Users/joel/.nuget/packages/discord.net.webhook/3.7.0</PkgDiscord_Net_Webhook>
+    <PkgDiscord_Net_Interactions Condition=" '$(PkgDiscord_Net_Interactions)' == '' ">/Users/joel/.nuget/packages/discord.net.interactions/3.7.0</PkgDiscord_Net_Interactions>
+    <PkgDiscord_Net_Commands Condition=" '$(PkgDiscord_Net_Commands)' == '' ">/Users/joel/.nuget/packages/discord.net.commands/3.7.0</PkgDiscord_Net_Commands>
+    <PkgDiscord_Net Condition=" '$(PkgDiscord_Net)' == '' ">/Users/joel/.nuget/packages/discord.net/3.7.0</PkgDiscord_Net>
   </PropertyGroup>
 </Project>
