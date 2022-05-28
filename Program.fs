@@ -16,7 +16,6 @@ let createStream path =
     Process.Start(
         ProcessStartInfo(
             FileName = "ffmpeg",
-            //Arguments = $"-hide_banner -loglevel panic -i \"{path}\" -ac 2 -f s16le -ar 44100 pipe:1",
             Arguments =
                 $"-hide_banner -loglevel panic -c:a libvorbis -i \"{path}\" -ac 2 -f s16le -ar 48000 -filter:a \"volume=20dB\" pipe:1",
             UseShellExecute = false,
@@ -79,8 +78,9 @@ type CommandHandler(client: DiscordSocketClient, commandsService: CommandService
                 let startsWithBang = message.HasCharPrefix('!', ref argPos)
                 let isMention = message.HasMentionPrefix((client.CurrentUser, ref argPos))
                 let isAuthorBot = message.Author.IsBot
+                let isAuthorVincent = message.Author.Username = "Vaub"
 
-                let shouldHandleCommand = not (not startsWithBang || isMention || isAuthorBot)
+                let shouldHandleCommand = not (not startsWithBang || isMention || isAuthorBot) && not isAuthorVincent
 
                 match shouldHandleCommand with
                 | true ->
