@@ -33,14 +33,6 @@ let sendAsync (client: IAudioClient, path) =
         do! discord.FlushAsync()
     }
 
-type InfoModule() =
-    inherit ModuleBase<SocketCommandContext>()
-
-    [<Command("!say"); Summary("Echoes a message")>]
-    member public x.sayAsync([<Remainder; Summary("The text to echo")>] echo: string) : Task =
-        printfn "sayAsync received %s" (echo.ToString())
-        x.ReplyAsync(echo)
-
 type SoundModule() =
     inherit ModuleBase<ICommandContext>()
 
@@ -55,13 +47,6 @@ type SoundModule() =
             do! sendAsync (connection, $"{clipName}.ogg")
             do! connection.StopAsync()
         }
-
-let messageUpdated =
-    Func<Cacheable<IMessage, uint64>, SocketMessage, ISocketMessageChannel, Task> (fun before after channel ->
-        task {
-            let! message = before.GetOrDownloadAsync()
-            printfn "%s -> %s" (message.ToString()) (after.ToString())
-        })
 
 let log =
     Func<LogMessage, Task>(fun message -> task { printfn "%s" (message.ToString()) })
@@ -80,7 +65,9 @@ type CommandHandler(client: DiscordSocketClient, commandsService: CommandService
                 let isAuthorBot = message.Author.IsBot
                 let isAuthorVincent = message.Author.Username = "Vaub"
 
-                let shouldHandleCommand = not (not startsWithBang || isMention || isAuthorBot) && not isAuthorVincent
+                let shouldHandleCommand =
+                    not (not startsWithBang || isMention || isAuthorBot)
+                    && not isAuthorVincent
 
                 match shouldHandleCommand with
                 | true ->
@@ -101,18 +88,6 @@ type CommandHandler(client: DiscordSocketClient, commandsService: CommandService
             let! a = commandsService.AddModulesAsync(assembly = Assembly.GetEntryAssembly(), services = null)
             ()
         }
-
-let msgHandler =
-    Func<SocketMessage, Task> (fun message ->
-        task {
-            printfn "Received msg %s" (message.ToString())
-
-            if (message.ToString()) = "Hi bot" then
-                message.Channel.SendMessageAsync("Hello back to you")
-                |> ignore
-        })
-
-let identity item = item
 
 [<EntryPoint>]
 let main argv =
