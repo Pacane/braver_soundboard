@@ -10,7 +10,8 @@ open System
 open System.Reflection
 open System.Diagnostics
 
-let token = "OTY5NzU5MjAyMjA3NzU2Mzg4.GRtGnq.iDyI8fd50RxUtkwAMI6h_E3jrRkzPWSv8lEvB8"
+let token =
+    "OTY5NzU5MjAyMjA3NzU2Mzg4.GRtGnq.iDyI8fd50RxUtkwAMI6h_E3jrRkzPWSv8lEvB8"
 
 let createStream path =
     Process.Start(
@@ -23,14 +24,21 @@ let createStream path =
         )
     )
 
-let sendAsync (client: IAudioClient, path) =
+let sendAsync (client: IAudioClient) (path: String) =
     task {
         use ffmpeg = createStream path
-        use output = ffmpeg.StandardOutput.BaseStream
-        use discord = client.CreatePCMStream AudioApplication.Mixed
 
-        do! output.CopyToAsync(discord)
-        do! discord.FlushAsync()
+        use output =
+            ffmpeg.StandardOutput.BaseStream
+
+        try
+            use discord =
+                client.CreateDirectPCMStream(AudioApplication.Mixed, 48000)
+            
+            do! output.CopyToAsync(discord)
+            do! discord.FlushAsync()
+        with
+        | e -> Console.WriteLine(e)
     }
 
 type SoundModule() =
@@ -39,31 +47,42 @@ type SoundModule() =
     [<Command("!sound", RunMode = RunMode.Async); Summary("Plays a sound clip")>]
     member public x.playSound([<Remainder; Summary("The name of the sound clip")>] clipName: string) : Task =
         task {
-            printfn "play sound clip %s" (clipName.ToString())
-            let guildUser: IVoiceState = downcast (x.Context.User)
+            printfn $"play sound clip %s{clipName.ToString()}"
+
+            let guildUser: IVoiceState =
+                downcast x.Context.User
+
             let voiceChannel = guildUser.VoiceChannel
 
             let! connection = voiceChannel.ConnectAsync()
-            do! sendAsync (connection, $"{clipName}.ogg")
+            do! sendAsync connection $"{clipName}.ogg"
             do! connection.StopAsync()
         }
 
 let log =
-    Func<LogMessage, Task>(fun message -> task { printfn "%s" (message.ToString()) })
+    Func<LogMessage, Task>(fun message -> task { printfn $"%s{message.ToString()}" })
 
 type CommandHandler(client: DiscordSocketClient, commandsService: CommandService) =
     let handleCommandAsync =
         Func<SocketMessage, Task> (fun messageParam ->
             task {
                 printfn "Received some message"
-                let message: SocketUserMessage = downcast messageParam
+
+                let message: SocketUserMessage =
+                    downcast messageParam
 
                 let argPos = 0
 
-                let startsWithBang = message.HasCharPrefix('!', ref argPos)
-                let isMention = message.HasMentionPrefix((client.CurrentUser, ref argPos))
+                let startsWithBang =
+                    message.HasCharPrefix('!', ref argPos)
+
+                let isMention =
+                    message.HasMentionPrefix((client.CurrentUser, ref argPos))
+
                 let isAuthorBot = message.Author.IsBot
-                let isAuthorVincent = message.Author.Username = "Vaub"
+
+                let isAuthorVincent =
+                    message.Author.Username = "Vaub"
 
                 let shouldHandleCommand =
                     not (not startsWithBang || isMention || isAuthorBot)
@@ -71,11 +90,13 @@ type CommandHandler(client: DiscordSocketClient, commandsService: CommandService
 
                 match shouldHandleCommand with
                 | true ->
-                    let context = new SocketCommandContext(client, message)
+                    let context =
+                        SocketCommandContext(client, message)
+
                     let! result = commandsService.ExecuteAsync(context = context, argPos = argPos, services = null)
 
                     match result with
-                    | result when (not result.IsSuccess) -> printfn "Error %s" (result.ErrorReason)
+                    | result when (not result.IsSuccess) -> printfn $"Error %s{result.ErrorReason}"
                     | _ -> ()
                 | false -> ()
             })
@@ -85,16 +106,20 @@ type CommandHandler(client: DiscordSocketClient, commandsService: CommandService
             printfn "Installing commands async"
             client.add_MessageReceived handleCommandAsync
 
-            let! a = commandsService.AddModulesAsync(assembly = Assembly.GetEntryAssembly(), services = null)
+            let! _ = commandsService.AddModulesAsync(assembly = Assembly.GetEntryAssembly(), services = null)
             ()
         }
 
 [<EntryPoint>]
 let main argv =
-    let config = DiscordSocketConfig(MessageCacheSize = 100)
+    let config =
+        DiscordSocketConfig(MessageCacheSize = 100)
+
     let client = new DiscordSocketClient(config)
     let commandService = new CommandService()
-    let commandHandler = CommandHandler(client, commandService)
+
+    let commandHandler =
+        CommandHandler(client, commandService)
 
     task {
         do! client.LoginAsync(tokenType = TokenType.Bot, token = token)
