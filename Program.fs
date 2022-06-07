@@ -1,9 +1,11 @@
-﻿open Microsoft.Extensions.DependencyInjection
+﻿open System.Text
+open Microsoft.Extensions.DependencyInjection
 open Discord
 open Discord.WebSocket
 open Discord.Commands
 open System.Threading.Tasks
 open System
+open System.IO
 open System.Reflection
 open Victoria
 open Victoria.Enums
@@ -13,8 +15,24 @@ open Victoria.Responses.Search
 let token =
     "OTY5NzU5MjAyMjA3NzU2Mzg4.GRtGnq.iDyI8fd50RxUtkwAMI6h_E3jrRkzPWSv8lEvB8"
 
+let lavalinkDirectory =
+    "/Users/joel/code/java/Lavalink"
+
 type VolumeFilter() =
     interface IFilter
+
+type TextModule() =
+    inherit ModuleBase<SocketCommandContext>()
+
+    [<Command("!sounds", RunMode = RunMode.Async); Summary("List available sounds from sound board.")>]
+    member public x.listSounds() : Task =
+        let stringBuilder =
+            Directory.GetFiles($"%s{lavalinkDirectory}/assets")
+            |> Seq.map (fun f -> f.Replace($"%s{lavalinkDirectory}/assets/", ""))
+            |> Seq.map (fun f -> f.Replace(".ogg", ""))
+            |> Seq.fold (fun (acc: StringBuilder) -> acc.AppendLine) (StringBuilder())
+
+        x.Context.Message.ReplyAsync(stringBuilder.ToString())
 
 type SoundModule(node: LavaNode) =
     inherit ModuleBase<ICommandContext>()
@@ -32,17 +50,17 @@ type SoundModule(node: LavaNode) =
                 | false -> Task.CompletedTask
         }
 
-    [<Command("!volume", RunMode = RunMode.Async); Summary("Sets the volume")>]
-    member public x.setVolume([<Remainder; Summary("volume level")>] volume: string) : Task =
+    [<Command("!leave", RunMode = RunMode.Async); Summary("Leaves current voice channel")>]
+    member public x.leaveVoiceChannel() : Task =
         task {
             do!
                 match node.HasPlayer(x.Context.Guild) with
                 | true ->
-                    let newVolume = Convert.ToDouble(volume)
+                    let lavaPlayer =
+                        node.GetPlayer(x.Context.Guild)
 
-                    node
-                        .GetPlayer(x.Context.Guild)
-                        .ApplyFilterAsync(VolumeFilter(), volume = newVolume)
+                    let voiceChannel = lavaPlayer.VoiceChannel
+                    node.LeaveAsync(voiceChannel)
                 | false -> Task.CompletedTask
         }
 
@@ -58,9 +76,24 @@ type SoundModule(node: LavaNode) =
 
             let! results = node.SearchAsync(SearchType.Direct, $"assets/%s{clipName}.ogg")
 
+            let channel = x.Context.Guild
+
             let! player =
-                match node.HasPlayer(x.Context.Guild) with
-                | true -> Task.FromResult(node.GetPlayer(x.Context.Guild))
+                match node.HasPlayer(channel) with
+                | true ->
+                    let lavaPlayer = node.GetPlayer(channel)
+
+                    let newPlayer =
+                        if lavaPlayer.VoiceChannel = voiceChannel then
+                            Task.FromResult(lavaPlayer)
+                        else
+                            node.LeaveAsync(lavaPlayer.VoiceChannel)
+                            |> Async.AwaitTask
+                            |> Async.RunSynchronously
+
+                            node.JoinAsync(voiceChannel)
+
+                    newPlayer
                 | false -> node.JoinAsync(voiceChannel)
 
             let playSound () =
