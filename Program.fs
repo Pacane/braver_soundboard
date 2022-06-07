@@ -56,7 +56,7 @@ type SoundModule(node: LavaNode) =
 
             let voiceChannel = guildUser.VoiceChannel
 
-            let! results = node.SearchAsync(SearchType.Direct, $"assets/%s{clipName}")
+            let! results = node.SearchAsync(SearchType.Direct, $"assets/%s{clipName}.ogg")
 
             let! player =
                 match node.HasPlayer(x.Context.Guild) with
