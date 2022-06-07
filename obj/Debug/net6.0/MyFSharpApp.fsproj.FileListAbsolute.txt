@@ -78,3 +78,11 @@
 /home/joel/code/fsharp/braver_soundboard/obj/Debug/net6.0/MyFSharpApp.dll
 /home/joel/code/fsharp/braver_soundboard/obj/Debug/net6.0/MyFSharpApp.pdb
 /home/joel/code/fsharp/braver_soundboard/obj/Debug/net6.0/MyFSharpApp.genruntimeconfig.cache
+/Users/joel/code/fs/sample1/MyFSharpApp/bin/Debug/net6.0/Microsoft.Extensions.Configuration.dll
+/Users/joel/code/fs/sample1/MyFSharpApp/bin/Debug/net6.0/Microsoft.Extensions.Configuration.Abstractions.dll
+/Users/joel/code/fs/sample1/MyFSharpApp/bin/Debug/net6.0/Microsoft.Extensions.DependencyInjection.dll
+/Users/joel/code/fs/sample1/MyFSharpApp/bin/Debug/net6.0/Microsoft.Extensions.Primitives.dll
+/Users/joel/code/fs/sample1/MyFSharpApp/bin/Debug/net6.0/System.Text.Json.dll
+/Users/joel/code/fs/sample1/MyFSharpApp/bin/Debug/net6.0/Victoria.dll
+/Users/joel/code/fs/sample1/MyFSharpApp/bin/Debug/net6.0/Lavalink4NET.dll
+/Users/joel/code/fs/sample1/MyFSharpApp/bin/Debug/net6.0/Lavalink4NET.DiscordNet.dll

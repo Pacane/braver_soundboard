@@ -1,50 +1,52 @@
-﻿open FSharp.Data
-open System.IO
-open Newtonsoft.Json
+﻿open Microsoft.Extensions.DependencyInjection
 open Discord
 open Discord.WebSocket
-open Discord.Audio
 open Discord.Commands
 open System.Threading.Tasks
 open System
 open System.Reflection
-open System.Diagnostics
+open Victoria
+open Victoria.Enums
+open Victoria.Filters
+open Victoria.Responses.Search
 
 let token =
     "OTY5NzU5MjAyMjA3NzU2Mzg4.GRtGnq.iDyI8fd50RxUtkwAMI6h_E3jrRkzPWSv8lEvB8"
 
-let createStream path =
-    Process.Start(
-        ProcessStartInfo(
-            FileName = "ffmpeg",
-            Arguments =
-                $"-hide_banner -loglevel panic -c:a libvorbis -i \"{path}\" -ac 2 -f s16le -ar 48000 -filter:a \"volume=20dB\" pipe:1",
-            UseShellExecute = false,
-            RedirectStandardOutput = true
-        )
-    )
+type VolumeFilter() =
+    interface IFilter
 
-let sendAsync (client: IAudioClient) (path: String) =
-    task {
-        use ffmpeg = createStream path
-
-        use output =
-            ffmpeg.StandardOutput.BaseStream
-
-        try
-            use discord =
-                client.CreateDirectPCMStream(AudioApplication.Mixed, 48000)
-            
-            do! output.CopyToAsync(discord)
-            do! discord.FlushAsync()
-        with
-        | e -> Console.WriteLine(e)
-    }
-
-type SoundModule() =
+type SoundModule(node: LavaNode) =
     inherit ModuleBase<ICommandContext>()
 
-    [<Command("!sound", RunMode = RunMode.Async); Summary("Plays a sound clip")>]
+    let node = node
+
+    member this.LavaNode = node
+
+    [<Command("!stop", RunMode = RunMode.Async); Summary("Stops playing audio")>]
+    member public x.stop() : Task =
+        task {
+            do!
+                match node.HasPlayer(x.Context.Guild) with
+                | true -> node.GetPlayer(x.Context.Guild).StopAsync()
+                | false -> Task.CompletedTask
+        }
+
+    [<Command("!volume", RunMode = RunMode.Async); Summary("Sets the volume")>]
+    member public x.setVolume([<Remainder; Summary("volume level")>] volume: string) : Task =
+        task {
+            do!
+                match node.HasPlayer(x.Context.Guild) with
+                | true ->
+                    let newVolume = Convert.ToDouble(volume)
+
+                    node
+                        .GetPlayer(x.Context.Guild)
+                        .ApplyFilterAsync(VolumeFilter(), volume = newVolume)
+                | false -> Task.CompletedTask
+        }
+
+    [<Command("!sound", RunMode = RunMode.Async); Summary("Plays a sound clip from the soundboard.")>]
     member public x.playSound([<Remainder; Summary("The name of the sound clip")>] clipName: string) : Task =
         task {
             printfn $"play sound clip %s{clipName.ToString()}"
@@ -54,15 +56,70 @@ type SoundModule() =
 
             let voiceChannel = guildUser.VoiceChannel
 
-            let! connection = voiceChannel.ConnectAsync()
-            do! sendAsync connection $"{clipName}.ogg"
-            do! connection.StopAsync()
+            let! results = node.SearchAsync(SearchType.Direct, $"assets/%s{clipName}")
+
+            let! player =
+                match node.HasPlayer(x.Context.Guild) with
+                | true -> Task.FromResult(node.GetPlayer(x.Context.Guild))
+                | false -> node.JoinAsync(voiceChannel)
+
+            let playSound () =
+                player.PlayAsync(Seq.head results.Tracks)
+
+            let playerPlayerState = player.PlayerState
+
+            do!
+                match playerPlayerState with
+                | PlayerState.Playing -> Task.CompletedTask
+                | PlayerState.None -> playSound ()
+                | PlayerState.Stopped -> playSound ()
+                | PlayerState.Paused -> playSound ()
+                | _ -> Task.CompletedTask
+        }
+
+    [<Command("!yt", RunMode = RunMode.Async); Summary("Plays an audio track from youtube")>]
+    member public x.playYoutube([<Remainder; Summary("The search query to run on YouTube")>] clipName: string) : Task =
+        task {
+            printfn $"play sound clip %s{clipName.ToString()}"
+
+            let guildUser: IVoiceState =
+                downcast x.Context.User
+
+            let voiceChannel = guildUser.VoiceChannel
+
+            let! results = node.SearchAsync(SearchType.YouTube, clipName)
+
+            let! player =
+                match node.HasPlayer(x.Context.Guild) with
+                | true -> Task.FromResult(node.GetPlayer(x.Context.Guild))
+                | false -> node.JoinAsync(voiceChannel)
+
+            let playSound () =
+                player.PlayAsync(Seq.head results.Tracks)
+
+            let playerPlayerState = player.PlayerState
+
+            let play: Task =
+                match playerPlayerState with
+                | PlayerState.Playing -> Task.CompletedTask
+                | PlayerState.None -> playSound ()
+                | PlayerState.Stopped -> playSound ()
+                | PlayerState.Paused -> playSound ()
+                | _ -> Task.CompletedTask
+
+            let p = Task.Run(fun x -> play)
+
+            do! player.ApplyFilterAsync(VolumeFilter(), volume = 0.01)
+            return p
         }
 
 let log =
     Func<LogMessage, Task>(fun message -> task { printfn $"%s{message.ToString()}" })
 
-type CommandHandler(client: DiscordSocketClient, commandsService: CommandService) =
+type CommandHandler(client: DiscordSocketClient, commandsService: CommandService, servicesProvider: IServiceProvider) =
+    let lavaNode: LavaNode =
+        servicesProvider.GetRequiredService()
+
     let handleCommandAsync =
         Func<SocketMessage, Task> (fun messageParam ->
             task {
@@ -93,7 +150,8 @@ type CommandHandler(client: DiscordSocketClient, commandsService: CommandService
                     let context =
                         SocketCommandContext(client, message)
 
-                    let! result = commandsService.ExecuteAsync(context = context, argPos = argPos, services = null)
+                    let! result =
+                        commandsService.ExecuteAsync(context = context, argPos = argPos, services = servicesProvider)
 
                     match result with
                     | result when (not result.IsSuccess) -> printfn $"Error %s{result.ErrorReason}"
@@ -101,12 +159,22 @@ type CommandHandler(client: DiscordSocketClient, commandsService: CommandService
                 | false -> ()
             })
 
-    member x.installCommandsAsync() =
+    let onReadyAsync =
+        Func<Task> (fun messageParam ->
+            task {
+                match lavaNode.IsConnected with
+                | true -> ()
+                | false -> do! lavaNode.ConnectAsync()
+            })
+
+    member x.installCommandsAsync(services: IServiceProvider) =
         task {
             printfn "Installing commands async"
             client.add_MessageReceived handleCommandAsync
 
-            let! _ = commandsService.AddModulesAsync(assembly = Assembly.GetEntryAssembly(), services = null)
+            client.add_Ready onReadyAsync
+
+            let! _ = commandsService.AddModulesAsync(assembly = Assembly.GetEntryAssembly(), services = services)
             ()
         }
 
@@ -116,10 +184,21 @@ let main argv =
         DiscordSocketConfig(MessageCacheSize = 100)
 
     let client = new DiscordSocketClient(config)
+
+    let services =
+        ServiceCollection()
+            .AddSingleton<DiscordSocketClient>(client)
+            .AddSingleton<LavaNode>()
+            .AddSingleton<LavaConfig>(LavaConfig(Authorization = "password"))
+            .AddSingleton<SoundModule>()
+
+    let provider =
+        services.BuildServiceProvider()
+
     let commandService = new CommandService()
 
     let commandHandler =
-        CommandHandler(client, commandService)
+        CommandHandler(client, commandService, provider)
 
     task {
         do! client.LoginAsync(tokenType = TokenType.Bot, token = token)
@@ -127,7 +206,7 @@ let main argv =
 
         client.add_Log log
 
-        do! commandHandler.installCommandsAsync ()
+        do! commandHandler.installCommandsAsync provider
 
         client.add_Ready (fun () ->
             printfn "%s" "Bot is connected"

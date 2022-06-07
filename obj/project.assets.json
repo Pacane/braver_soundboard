@@ -2,21 +2,21 @@
   "version": 3,
   "targets": {
     "net6.0": {
-      "Discord.Net/3.7.0": {
+      "Discord.Net/3.7.2": {
         "type": "package",
         "dependencies": {
-          "Discord.Net.Commands": "3.7.0",
-          "Discord.Net.Core": "3.7.0",
-          "Discord.Net.Interactions": "3.7.0",
-          "Discord.Net.Rest": "3.7.0",
-          "Discord.Net.WebSocket": "3.7.0",
-          "Discord.Net.Webhook": "3.7.0"
+          "Discord.Net.Commands": "3.7.2",
+          "Discord.Net.Core": "3.7.2",
+          "Discord.Net.Interactions": "3.7.2",
+          "Discord.Net.Rest": "3.7.2",
+          "Discord.Net.WebSocket": "3.7.2",
+          "Discord.Net.Webhook": "3.7.2"
         }
       },
-      "Discord.Net.Commands/3.7.0": {
+      "Discord.Net.Commands/3.7.2": {
         "type": "package",
         "dependencies": {
-          "Discord.Net.Core": "3.7.0"
+          "Discord.Net.Core": "3.7.2"
         },
         "compile": {
           "lib/net6.0/Discord.Net.Commands.dll": {}
@@ -25,7 +25,7 @@
           "lib/net6.0/Discord.Net.Commands.dll": {}
         }
       },
-      "Discord.Net.Core/3.7.0": {
+      "Discord.Net.Core/3.7.2": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "13.0.1",
@@ -40,12 +40,12 @@
           "lib/net6.0/Discord.Net.Core.dll": {}
         }
       },
-      "Discord.Net.Interactions/3.7.0": {
+      "Discord.Net.Interactions/3.7.2": {
         "type": "package",
         "dependencies": {
-          "Discord.Net.Core": "3.7.0",
-          "Discord.Net.Rest": "3.7.0",
-          "Discord.Net.WebSocket": "3.7.0",
+          "Discord.Net.Core": "3.7.2",
+          "Discord.Net.Rest": "3.7.2",
+          "Discord.Net.WebSocket": "3.7.2",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "5.0.0",
           "System.Collections.Immutable": "5.0.0",
           "System.Reactive": "5.0.0"
@@ -57,10 +57,10 @@
           "lib/net6.0/Discord.Net.Interactions.dll": {}
         }
       },
-      "Discord.Net.Rest/3.7.0": {
+      "Discord.Net.Rest/3.7.2": {
         "type": "package",
         "dependencies": {
-          "Discord.Net.Core": "3.7.0"
+          "Discord.Net.Core": "3.7.2"
         },
         "compile": {
           "lib/net6.0/Discord.Net.Rest.dll": {}
@@ -69,11 +69,11 @@
           "lib/net6.0/Discord.Net.Rest.dll": {}
         }
       },
-      "Discord.Net.Webhook/3.7.0": {
+      "Discord.Net.Webhook/3.7.2": {
         "type": "package",
         "dependencies": {
-          "Discord.Net.Core": "3.7.0",
-          "Discord.Net.Rest": "3.7.0"
+          "Discord.Net.Core": "3.7.2",
+          "Discord.Net.Rest": "3.7.2"
         },
         "compile": {
           "lib/net6.0/Discord.Net.Webhook.dll": {}
@@ -82,11 +82,11 @@
           "lib/net6.0/Discord.Net.Webhook.dll": {}
         }
       },
-      "Discord.Net.WebSocket/3.7.0": {
+      "Discord.Net.WebSocket/3.7.2": {
         "type": "package",
         "dependencies": {
-          "Discord.Net.Core": "3.7.0",
-          "Discord.Net.Rest": "3.7.0"
+          "Discord.Net.Core": "3.7.2",
+          "Discord.Net.Rest": "3.7.2"
         },
         "compile": {
           "lib/net6.0/Discord.Net.WebSocket.dll": {}
@@ -165,6 +165,31 @@
           "lib/netstandard2.0/FSharp.Data.dll": {}
         }
       },
+      "Lavalink4NET/2.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Lavalink4NET.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Lavalink4NET.dll": {}
+        }
+      },
+      "Lavalink4NET.Discord.NET/2.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Discord.Net.WebSocket": "2.0.1",
+          "Lavalink4NET": "2.1.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Lavalink4NET.DiscordNet.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Lavalink4NET.DiscordNet.dll": {}
+        }
+      },
       "Microsoft.Bcl.AsyncInterfaces/6.0.0": {
         "type": "package",
         "compile": {
@@ -174,6 +199,47 @@
           "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {}
         }
       },
+      "Microsoft.Extensions.Configuration/6.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "6.0.0",
+          "Microsoft.Extensions.Primitives": "6.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll": {}
+        }
+      },
+      "Microsoft.Extensions.Configuration.Abstractions/6.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "6.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll": {}
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection/6.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        },
+        "compile": {
+          "lib/net6.0/Microsoft.Extensions.DependencyInjection.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.Extensions.DependencyInjection.dll": {}
+        },
+        "build": {
+          "buildTransitive/netcoreapp3.1/_._": {}
+        }
+      },
       "Microsoft.Extensions.DependencyInjection.Abstractions/6.0.0": {
         "type": "package",
         "compile": {
@@ -181,6 +247,21 @@
         },
         "runtime": {
           "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {}
+        },
+        "build": {
+          "buildTransitive/netcoreapp3.1/_._": {}
+        }
+      },
+      "Microsoft.Extensions.Primitives/6.0.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        },
+        "compile": {
+          "lib/net6.0/Microsoft.Extensions.Primitives.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.Extensions.Primitives.dll": {}
         },
         "build": {
           "buildTransitive/netcoreapp3.1/_._": {}
@@ -258,6 +339,44 @@
           "buildTransitive/netcoreapp3.1/_._": {}
         }
       },
+      "System.Text.Encodings.Web/6.0.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        },
+        "compile": {
+          "lib/net6.0/System.Text.Encodings.Web.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/System.Text.Encodings.Web.dll": {}
+        },
+        "build": {
+          "buildTransitive/netcoreapp3.1/_._": {}
+        },
+        "runtimeTargets": {
+          "runtimes/browser/lib/net6.0/System.Text.Encodings.Web.dll": {
+            "assetType": "runtime",
+            "rid": "browser"
+          }
+        }
+      },
+      "System.Text.Json/6.0.4": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0",
+          "System.Text.Encodings.Web": "6.0.0"
+        },
+        "compile": {
+          "lib/net6.0/System.Text.Json.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/System.Text.Json.dll": {}
+        },
+        "build": {
+          "build/System.Text.Json.targets": {},
+          "buildTransitive/netcoreapp3.1/_._": {}
+        }
+      },
       "System.ValueTuple/4.5.0": {
         "type": "package",
         "compile": {
@@ -266,31 +385,45 @@
         "runtime": {
           "lib/netcoreapp2.0/_._": {}
         }
+      },
+      "Victoria/5.2.8": {
+        "type": "package",
+        "dependencies": {
+          "Discord.Net.WebSocket": "3.3.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
+          "System.Text.Json": "6.0.2"
+        },
+        "compile": {
+          "lib/net6.0/Victoria.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Victoria.dll": {}
+        }
       }
     }
   },
   "libraries": {
-    "Discord.Net/3.7.0": {
-      "sha512": "4Yo5+cAEwf+uczKxA3XJ67ZHx06s0T5tG3CB4KR9HDAcb7CdMTo9K3l78eWUMsfSM7uen+0hHvmZ4etZChqoOw==",
+    "Discord.Net/3.7.2": {
+      "sha512": "FAiCLGu5rp6+Z10FjKbbJ6LLpKjbMBGpozixkJlz5LZvuncPx8f4AWFAw7pBecKUuAh983qiZ8CZYZcNXsI4qg==",
       "type": "package",
-      "path": "discord.net/3.7.0",
+      "path": "discord.net/3.7.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "discord.net.3.7.0.nupkg.sha512",
+        "discord.net.3.7.2.nupkg.sha512",
         "discord.net.nuspec",
         "paket-installmodel.cache"
       ]
     },
-    "Discord.Net.Commands/3.7.0": {
-      "sha512": "GssDCYs3nglj5oyJKXpMVQDoH9Q+omucRlslYtSjOZnTBbg7P61HM1ME2OlS2Ma3K9gJWstOPd6+E8dRkY52XQ==",
+    "Discord.Net.Commands/3.7.2": {
+      "sha512": "aOEGP04X64htsTr7ozKj9qHpmvOfitSw5gfR8Tw9TX0+FdswD2LNL2KfOAIaxRKZmRTm34aXQEJrVq0K8AptmQ==",
       "type": "package",
-      "path": "discord.net.commands/3.7.0",
+      "path": "discord.net.commands/3.7.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "PackageLogo.png",
-        "discord.net.commands.3.7.0.nupkg.sha512",
+        "discord.net.commands.3.7.2.nupkg.sha512",
         "discord.net.commands.nuspec",
         "lib/net461/Discord.Net.Commands.dll",
         "lib/net461/Discord.Net.Commands.xml",
@@ -305,15 +438,15 @@
         "paket-installmodel.cache"
       ]
     },
-    "Discord.Net.Core/3.7.0": {
-      "sha512": "+fN8MacuCDDAdZD4aXMDgP/l7cwKmOrGQB6OlkTvfRiyjVYFiLCi7RI2fKmHTQ4GvyrOF99gfHes9q11PPFo2A==",
+    "Discord.Net.Core/3.7.2": {
+      "sha512": "apwswc6LjN4dj3u27SO3Hr56Jzl91wzReahieoD7IQhV+BJQaRxhTRiEEWFTrBzHfeFHEOQ7r6vZnra3zeFhKA==",
       "type": "package",
-      "path": "discord.net.core/3.7.0",
+      "path": "discord.net.core/3.7.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "PackageLogo.png",
-        "discord.net.core.3.7.0.nupkg.sha512",
+        "discord.net.core.3.7.2.nupkg.sha512",
         "discord.net.core.nuspec",
         "lib/net461/Discord.Net.Core.dll",
         "lib/net461/Discord.Net.Core.xml",
@@ -328,15 +461,15 @@
         "paket-installmodel.cache"
       ]
     },
-    "Discord.Net.Interactions/3.7.0": {
-      "sha512": "UFZuYzFhY3/9Gb/ee/3GgdKV0JjjgGXd5Ed4pw3o1rx1yAtqhhqe5dP16MAbwurLqcpd/7Ly8ZsBPZwqvW+wdg==",
+    "Discord.Net.Interactions/3.7.2": {
+      "sha512": "dwGhEdDB0yyo/lGtjwIDVZmsuD52di7lIZWu/sBtvvA05dMgYZq5S6ILdsBXjOyaHeXd+EV4YMlj2VS/rm619w==",
       "type": "package",
-      "path": "discord.net.interactions/3.7.0",
+      "path": "discord.net.interactions/3.7.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "PackageLogo.png",
-        "discord.net.interactions.3.7.0.nupkg.sha512",
+        "discord.net.interactions.3.7.2.nupkg.sha512",
         "discord.net.interactions.nuspec",
         "lib/net461/Discord.Net.Interactions.dll",
         "lib/net461/Discord.Net.Interactions.xml",
@@ -351,15 +484,15 @@
         "paket-installmodel.cache"
       ]
     },
-    "Discord.Net.Rest/3.7.0": {
-      "sha512": "PeqcH/4k2Nhyuxnaa7t03U+Jt4hcOCTJvObzv4wXv404fhRkMmhHJT788o1F7HKgTaaNPXm7IRVGdIyG73TR7w==",
+    "Discord.Net.Rest/3.7.2": {
+      "sha512": "dyp8YaMBNJ837EH1KNz2PNGZqc2y71WFd1+pdldF+pLQJ3Gf/+V7685paAR7bQw7yFNyqEBR/QRBCNp+QIQ7Wg==",
       "type": "package",
-      "path": "discord.net.rest/3.7.0",
+      "path": "discord.net.rest/3.7.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "PackageLogo.png",
-        "discord.net.rest.3.7.0.nupkg.sha512",
+        "discord.net.rest.3.7.2.nupkg.sha512",
         "discord.net.rest.nuspec",
         "lib/net461/Discord.Net.Rest.dll",
         "lib/net461/Discord.Net.Rest.xml",
@@ -374,15 +507,15 @@
         "paket-installmodel.cache"
       ]
     },
-    "Discord.Net.Webhook/3.7.0": {
-      "sha512": "Isi2eoMrzQNzqilqbzlTEBD0RFPBnhhm3aE9xZ6+SEOIj2F7j1OmDsonHyo+BhAjbynKmfEodiSB/IBjVshwsg==",
+    "Discord.Net.Webhook/3.7.2": {
+      "sha512": "da3i/mTq2y7mfj3xlHH14S4PivHbflJCVr8OUikJtQrxBOxvPkqP7ZYk3Y9S28q0K8qik+TUjCcjL5gELKrh/A==",
       "type": "package",
-      "path": "discord.net.webhook/3.7.0",
+      "path": "discord.net.webhook/3.7.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "PackageLogo.png",
-        "discord.net.webhook.3.7.0.nupkg.sha512",
+        "discord.net.webhook.3.7.2.nupkg.sha512",
         "discord.net.webhook.nuspec",
         "lib/net5.0/Discord.Net.Webhook.dll",
         "lib/net5.0/Discord.Net.Webhook.xml",
@@ -395,15 +528,15 @@
         "paket-installmodel.cache"
       ]
     },
-    "Discord.Net.WebSocket/3.7.0": {
-      "sha512": "Jaau78Xq6UTdyDl9W0szAJMnW7wiiu6s4xhOgMq3sJ9LAODZwz3wmNIYXoWurcRQ8ImI+QG93N2KxAjO/+JB4w==",
+    "Discord.Net.WebSocket/3.7.2": {
+      "sha512": "pYCd6ET44ADaNiyEw82TaJnR7TKYHfrKCytWFWMPL5faJhoh260avZn3Hwunlf331lEQ0f4K1CujPkQbNuq7kQ==",
       "type": "package",
-      "path": "discord.net.websocket/3.7.0",
+      "path": "discord.net.websocket/3.7.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "PackageLogo.png",
-        "discord.net.websocket.3.7.0.nupkg.sha512",
+        "discord.net.websocket.3.7.2.nupkg.sha512",
         "discord.net.websocket.nuspec",
         "lib/net461/Discord.Net.WebSocket.dll",
         "lib/net461/Discord.Net.WebSocket.xml",
@@ -480,6 +613,40 @@
         "typeproviders/fsharp41/netstandard2.0/FSharp.Data.DesignTime.dll"
       ]
     },
+    "Lavalink4NET/2.1.1": {
+      "sha512": "pa0honczCKERulNxgUl7GJfACr8tYdXE0sWN0+yroVPhLvgwOZQ6pxSUX1jqpWIKS+TZqD91KRsjggm0JiEj8w==",
+      "type": "package",
+      "path": "lavalink4net/2.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Lavalink4NET.png",
+        "lavalink4net.2.1.1.nupkg.sha512",
+        "lavalink4net.nuspec",
+        "lib/netstandard2.0/Lavalink4NET.dll",
+        "lib/netstandard2.0/Lavalink4NET.xml",
+        "lib/netstandard2.1/Lavalink4NET.dll",
+        "lib/netstandard2.1/Lavalink4NET.xml",
+        "paket-installmodel.cache"
+      ]
+    },
+    "Lavalink4NET.Discord.NET/2.1.1": {
+      "sha512": "vSJmcvd2fkkz28r+OagSDCAgqtG1edfElnxIPFbmXw72DIUokTvxHdvVlcoqJpjshWo2jir9VfVe5k7sxFrRHg==",
+      "type": "package",
+      "path": "lavalink4net.discord.net/2.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Lavalink4NET.png",
+        "lavalink4net.discord.net.2.1.1.nupkg.sha512",
+        "lavalink4net.discord.net.nuspec",
+        "lib/netstandard2.0/Lavalink4NET.DiscordNet.dll",
+        "lib/netstandard2.0/Lavalink4NET.DiscordNet.xml",
+        "lib/netstandard2.1/Lavalink4NET.DiscordNet.dll",
+        "lib/netstandard2.1/Lavalink4NET.DiscordNet.xml",
+        "paket-installmodel.cache"
+      ]
+    },
     "Microsoft.Bcl.AsyncInterfaces/6.0.0": {
       "sha512": "UcSjPsst+DfAdJGVDsu346FX0ci0ah+lw3WRtn18NUwEqRt70HaOQ7lI72vy3+1LxtqI3T5GWwV39rQSrCzAeg==",
       "type": "package",
@@ -498,6 +665,72 @@
         "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.xml",
         "microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
         "microsoft.bcl.asyncinterfaces.nuspec",
+        "paket-installmodel.cache",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.Configuration/6.0.1": {
+      "sha512": "BUyFU9t+HzlSE7ri4B+AQN2BgTgHv/uM82s5ZkgU1BApyzWzIl48nDsG5wR1t0pniNuuyTBzG3qCW8152/NtSw==",
+      "type": "package",
+      "path": "microsoft.extensions.configuration/6.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/Microsoft.Extensions.Configuration.dll",
+        "lib/net461/Microsoft.Extensions.Configuration.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.xml",
+        "microsoft.extensions.configuration.6.0.1.nupkg.sha512",
+        "microsoft.extensions.configuration.nuspec",
+        "paket-installmodel.cache",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.Configuration.Abstractions/6.0.0": {
+      "sha512": "qWzV9o+ZRWq+pGm+1dF+R7qTgTYoXvbyowRoBxQJGfqTpqDun2eteerjRQhq5PQ/14S+lqto3Ft4gYaRyl4rdQ==",
+      "type": "package",
+      "path": "microsoft.extensions.configuration.abstractions/6.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "lib/net461/Microsoft.Extensions.Configuration.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.xml",
+        "microsoft.extensions.configuration.abstractions.6.0.0.nupkg.sha512",
+        "microsoft.extensions.configuration.abstractions.nuspec",
+        "paket-installmodel.cache",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.DependencyInjection/6.0.0": {
+      "sha512": "k6PWQMuoBDGGHOQTtyois2u4AwyVcIwL2LaSLlTZQm2CYcJ1pxbt6jfAnpWmzENA/wfrYRI/X9DTLoUkE4AsLw==",
+      "type": "package",
+      "path": "microsoft.extensions.dependencyinjection/6.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.targets",
+        "buildTransitive/netcoreapp3.1/_._",
+        "lib/net461/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net461/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/net6.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net6.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.xml",
+        "microsoft.extensions.dependencyinjection.6.0.0.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.nuspec",
         "paket-installmodel.cache",
         "useSharedDesignerContext.txt"
       ]
@@ -524,6 +757,32 @@
         "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
         "microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",
         "microsoft.extensions.dependencyinjection.abstractions.nuspec",
+        "paket-installmodel.cache",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.Primitives/6.0.0": {
+      "sha512": "9+PnzmQFfEFNR9J2aDTfJGGupShHjOuGw4VUv+JB044biSHrnmCIMD+mJHmb2H7YryrfBEXDurxQ47gJZdCKNQ==",
+      "type": "package",
+      "path": "microsoft.extensions.primitives/6.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Primitives.targets",
+        "buildTransitive/netcoreapp3.1/_._",
+        "lib/net461/Microsoft.Extensions.Primitives.dll",
+        "lib/net461/Microsoft.Extensions.Primitives.xml",
+        "lib/net6.0/Microsoft.Extensions.Primitives.dll",
+        "lib/net6.0/Microsoft.Extensions.Primitives.xml",
+        "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.dll",
+        "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.xml",
+        "microsoft.extensions.primitives.6.0.0.nupkg.sha512",
+        "microsoft.extensions.primitives.nuspec",
         "paket-installmodel.cache",
         "useSharedDesignerContext.txt"
       ]
@@ -686,6 +945,89 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "System.Text.Encodings.Web/6.0.0": {
+      "sha512": "Vg8eB5Tawm1IFqj4TVK1czJX89rhFxJo9ELqc/Eiq0eXy13RK00eubyU6TJE6y+GQXjyV5gSfiewDUZjQgSE0w==",
+      "type": "package",
+      "path": "system.text.encodings.web/6.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/netcoreapp2.0/System.Text.Encodings.Web.targets",
+        "buildTransitive/netcoreapp3.1/_._",
+        "lib/net461/System.Text.Encodings.Web.dll",
+        "lib/net461/System.Text.Encodings.Web.xml",
+        "lib/net6.0/System.Text.Encodings.Web.dll",
+        "lib/net6.0/System.Text.Encodings.Web.xml",
+        "lib/netcoreapp3.1/System.Text.Encodings.Web.dll",
+        "lib/netcoreapp3.1/System.Text.Encodings.Web.xml",
+        "lib/netstandard2.0/System.Text.Encodings.Web.dll",
+        "lib/netstandard2.0/System.Text.Encodings.Web.xml",
+        "paket-installmodel.cache",
+        "runtimes/browser/lib/net6.0/System.Text.Encodings.Web.dll",
+        "runtimes/browser/lib/net6.0/System.Text.Encodings.Web.xml",
+        "system.text.encodings.web.6.0.0.nupkg.sha512",
+        "system.text.encodings.web.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "System.Text.Json/6.0.4": {
+      "sha512": "krM+rxZPl5MQqGmHbj/gLis58IqGrLQGm7CIvNJ72Wj1MCdXNu1uMco5wRr7PmPOL/ITF/uEkB/3S1nSGFNvHg==",
+      "type": "package",
+      "path": "system.text.json/6.0.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "analyzers/dotnet/roslyn3.11/cs/System.Text.Json.SourceGeneration.dll",
+        "analyzers/dotnet/roslyn3.11/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/System.Text.Json.SourceGeneration.dll",
+        "analyzers/dotnet/roslyn4.0/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/de/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/es/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/it/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
+        "build/System.Text.Json.targets",
+        "buildTransitive/netcoreapp2.0/System.Text.Json.targets",
+        "buildTransitive/netcoreapp3.1/_._",
+        "lib/net461/System.Text.Json.dll",
+        "lib/net461/System.Text.Json.xml",
+        "lib/net6.0/System.Text.Json.dll",
+        "lib/net6.0/System.Text.Json.xml",
+        "lib/netcoreapp3.1/System.Text.Json.dll",
+        "lib/netcoreapp3.1/System.Text.Json.xml",
+        "lib/netstandard2.0/System.Text.Json.dll",
+        "lib/netstandard2.0/System.Text.Json.xml",
+        "paket-installmodel.cache",
+        "system.text.json.6.0.4.nupkg.sha512",
+        "system.text.json.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
     "System.ValueTuple/4.5.0": {
       "sha512": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ==",
       "type": "package",
@@ -730,28 +1072,56 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "Victoria/5.2.8": {
+      "sha512": "3/T9XK+Xf0ymtOZRKjJcPax0z03BRaOgt0CVTnnFyeS+OtEa0xW52Os1wjLXWm8pf+Whi4tUAHvc4o7yZk0QDA==",
+      "type": "package",
+      "path": "victoria/5.2.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Logo.png",
+        "lib/net5.0/Victoria.dll",
+        "lib/net5.0/Victoria.xml",
+        "lib/net6.0/Victoria.dll",
+        "lib/net6.0/Victoria.xml",
+        "lib/netcoreapp3.1/Victoria.dll",
+        "lib/netcoreapp3.1/Victoria.xml",
+        "paket-installmodel.cache",
+        "victoria.5.2.8.nupkg.sha512",
+        "victoria.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "Discord.Net >= 3.7.0",
-      "Discord.Net.Commands >= 3.7.0",
-      "Discord.Net.Core >= 3.7.0",
-      "Discord.Net.Interactions >= 3.7.0",
-      "Discord.Net.Rest >= 3.7.0",
-      "Discord.Net.WebSocket >= 3.7.0",
-      "Discord.Net.Webhook >= 3.7.0",
+      "Discord.Net >= 3.7.2",
+      "Discord.Net.Commands >= 3.7.2",
+      "Discord.Net.Core >= 3.7.2",
+      "Discord.Net.Interactions >= 3.7.2",
+      "Discord.Net.Rest >= 3.7.2",
+      "Discord.Net.WebSocket >= 3.7.2",
+      "Discord.Net.Webhook >= 3.7.2",
       "FSharp.Core >= 6.0.4",
       "FSharp.Data >= 4.2.8",
+      "Lavalink4NET >= 2.1.1",
+      "Lavalink4NET.Discord.NET >= 2.1.1",
       "Microsoft.Bcl.AsyncInterfaces >= 6.0.0",
+      "Microsoft.Extensions.Configuration >= 6.0.1",
+      "Microsoft.Extensions.Configuration.Abstractions >= 6.0.0",
+      "Microsoft.Extensions.DependencyInjection >= 6.0.0",
       "Microsoft.Extensions.DependencyInjection.Abstractions >= 6.0.0",
+      "Microsoft.Extensions.Primitives >= 6.0.0",
       "Newtonsoft.Json >= 13.0.1",
       "System.Collections.Immutable >= 6.0.0",
       "System.Interactive.Async >= 6.0.1",
       "System.Linq.Async >= 6.0.1",
       "System.Reactive >= 5.0.0",
       "System.Runtime.CompilerServices.Unsafe >= 6.0.0",
-      "System.ValueTuple >= 4.5.0"
+      "System.Text.Encodings.Web >= 6.0.0",
+      "System.Text.Json >= 6.0.4",
+      "System.ValueTuple >= 4.5.0",
+      "Victoria >= 5.2.8"
     ]
   },
   "packageFolders": {
@@ -797,37 +1167,37 @@
         "dependencies": {
           "Discord.Net": {
             "target": "Package",
-            "version": "[3.7.0, )",
+            "version": "[3.7.2, )",
             "generatePathProperty": true
           },
           "Discord.Net.Commands": {
             "target": "Package",
-            "version": "[3.7.0, )",
+            "version": "[3.7.2, )",
             "generatePathProperty": true
           },
           "Discord.Net.Core": {
             "target": "Package",
-            "version": "[3.7.0, )",
+            "version": "[3.7.2, )",
             "generatePathProperty": true
           },
           "Discord.Net.Interactions": {
             "target": "Package",
-            "version": "[3.7.0, )",
+            "version": "[3.7.2, )",
             "generatePathProperty": true
           },
           "Discord.Net.Rest": {
             "target": "Package",
-            "version": "[3.7.0, )",
+            "version": "[3.7.2, )",
             "generatePathProperty": true
           },
           "Discord.Net.WebSocket": {
             "target": "Package",
-            "version": "[3.7.0, )",
+            "version": "[3.7.2, )",
             "generatePathProperty": true
           },
           "Discord.Net.Webhook": {
             "target": "Package",
-            "version": "[3.7.0, )",
+            "version": "[3.7.2, )",
             "generatePathProperty": true
           },
           "FSharp.Core": {
@@ -840,12 +1210,42 @@
             "version": "[4.2.8, )",
             "generatePathProperty": true
           },
+          "Lavalink4NET": {
+            "target": "Package",
+            "version": "[2.1.1, )",
+            "generatePathProperty": true
+          },
+          "Lavalink4NET.Discord.NET": {
+            "target": "Package",
+            "version": "[2.1.1, )",
+            "generatePathProperty": true
+          },
           "Microsoft.Bcl.AsyncInterfaces": {
             "target": "Package",
             "version": "[6.0.0, )",
             "generatePathProperty": true
           },
+          "Microsoft.Extensions.Configuration": {
+            "target": "Package",
+            "version": "[6.0.1, )",
+            "generatePathProperty": true
+          },
+          "Microsoft.Extensions.Configuration.Abstractions": {
+            "target": "Package",
+            "version": "[6.0.0, )",
+            "generatePathProperty": true
+          },
+          "Microsoft.Extensions.DependencyInjection": {
+            "target": "Package",
+            "version": "[6.0.0, )",
+            "generatePathProperty": true
+          },
           "Microsoft.Extensions.DependencyInjection.Abstractions": {
+            "target": "Package",
+            "version": "[6.0.0, )",
+            "generatePathProperty": true
+          },
+          "Microsoft.Extensions.Primitives": {
             "target": "Package",
             "version": "[6.0.0, )",
             "generatePathProperty": true
@@ -880,9 +1280,24 @@
             "version": "[6.0.0, )",
             "generatePathProperty": true
           },
+          "System.Text.Encodings.Web": {
+            "target": "Package",
+            "version": "[6.0.0, )",
+            "generatePathProperty": true
+          },
+          "System.Text.Json": {
+            "target": "Package",
+            "version": "[6.0.4, )",
+            "generatePathProperty": true
+          },
           "System.ValueTuple": {
             "target": "Package",
             "version": "[4.5.0, )",
+            "generatePathProperty": true
+          },
+          "Victoria": {
+            "target": "Package",
+            "version": "[5.2.8, )",
             "generatePathProperty": true
           }
         },

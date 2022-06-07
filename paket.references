@@ -1,3 +1,7 @@
 FSharp.Data
 Newtonsoft.Json
 Discord.Net
+Victoria
+Microsoft.Extensions.Configuration
+Microsoft.Extensions.DependencyInjection
+Lavalink4NET.Discord.NET

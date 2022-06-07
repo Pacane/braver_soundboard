@@ -44,37 +44,37 @@
           "dependencies": {
             "Discord.Net": {
               "target": "Package",
-              "version": "[3.7.0, )",
+              "version": "[3.7.2, )",
               "generatePathProperty": true
             },
             "Discord.Net.Commands": {
               "target": "Package",
-              "version": "[3.7.0, )",
+              "version": "[3.7.2, )",
               "generatePathProperty": true
             },
             "Discord.Net.Core": {
               "target": "Package",
-              "version": "[3.7.0, )",
+              "version": "[3.7.2, )",
               "generatePathProperty": true
             },
             "Discord.Net.Interactions": {
               "target": "Package",
-              "version": "[3.7.0, )",
+              "version": "[3.7.2, )",
               "generatePathProperty": true
             },
             "Discord.Net.Rest": {
               "target": "Package",
-              "version": "[3.7.0, )",
+              "version": "[3.7.2, )",
               "generatePathProperty": true
             },
             "Discord.Net.WebSocket": {
               "target": "Package",
-              "version": "[3.7.0, )",
+              "version": "[3.7.2, )",
               "generatePathProperty": true
             },
             "Discord.Net.Webhook": {
               "target": "Package",
-              "version": "[3.7.0, )",
+              "version": "[3.7.2, )",
               "generatePathProperty": true
             },
             "FSharp.Core": {
@@ -87,12 +87,42 @@
               "version": "[4.2.8, )",
               "generatePathProperty": true
             },
+            "Lavalink4NET": {
+              "target": "Package",
+              "version": "[2.1.1, )",
+              "generatePathProperty": true
+            },
+            "Lavalink4NET.Discord.NET": {
+              "target": "Package",
+              "version": "[2.1.1, )",
+              "generatePathProperty": true
+            },
             "Microsoft.Bcl.AsyncInterfaces": {
               "target": "Package",
               "version": "[6.0.0, )",
               "generatePathProperty": true
             },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[6.0.1, )",
+              "generatePathProperty": true
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[6.0.0, )",
+              "generatePathProperty": true
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[6.0.0, )",
+              "generatePathProperty": true
+            },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[6.0.0, )",
+              "generatePathProperty": true
+            },
+            "Microsoft.Extensions.Primitives": {
               "target": "Package",
               "version": "[6.0.0, )",
               "generatePathProperty": true
@@ -127,9 +157,24 @@
               "version": "[6.0.0, )",
               "generatePathProperty": true
             },
+            "System.Text.Encodings.Web": {
+              "target": "Package",
+              "version": "[6.0.0, )",
+              "generatePathProperty": true
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[6.0.4, )",
+              "generatePathProperty": true
+            },
             "System.ValueTuple": {
               "target": "Package",
               "version": "[4.5.0, )",
+              "generatePathProperty": true
+            },
+            "Victoria": {
+              "target": "Package",
+              "version": "[5.2.8, )",
               "generatePathProperty": true
             }
           },
