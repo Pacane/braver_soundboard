@@ -39,44 +39,16 @@ type SoundModule(node: LavaNode) =
 
     let node = node
 
-    member this.LavaNode = node
-
-    [<Command("!stop", RunMode = RunMode.Async); Summary("Stops playing audio")>]
-    member public x.stop() : Task =
+    let playAudio (context: ICommandContext) searchType soundName =
         task {
-            do!
-                match node.HasPlayer(x.Context.Guild) with
-                | true -> node.GetPlayer(x.Context.Guild).StopAsync()
-                | false -> Task.CompletedTask
-        }
-
-    [<Command("!leave", RunMode = RunMode.Async); Summary("Leaves current voice channel")>]
-    member public x.leaveVoiceChannel() : Task =
-        task {
-            do!
-                match node.HasPlayer(x.Context.Guild) with
-                | true ->
-                    let lavaPlayer =
-                        node.GetPlayer(x.Context.Guild)
-
-                    let voiceChannel = lavaPlayer.VoiceChannel
-                    node.LeaveAsync(voiceChannel)
-                | false -> Task.CompletedTask
-        }
-
-    [<Command("!sound", RunMode = RunMode.Async); Summary("Plays a sound clip from the soundboard.")>]
-    member public x.playSound([<Remainder; Summary("The name of the sound clip")>] clipName: string) : Task =
-        task {
-            printfn $"play sound clip %s{clipName.ToString()}"
-
             let guildUser: IVoiceState =
-                downcast x.Context.User
+                downcast context.User
 
             let voiceChannel = guildUser.VoiceChannel
 
-            let! results = node.SearchAsync(SearchType.Direct, $"assets/%s{clipName}.ogg")
+            let! results = node.SearchAsync(searchType, $"assets/%s{soundName}.ogg")
 
-            let channel = x.Context.Guild
+            let channel = context.Guild
 
             let! player =
                 match node.HasPlayer(channel) with
@@ -110,41 +82,38 @@ type SoundModule(node: LavaNode) =
                 | _ -> Task.CompletedTask
         }
 
+    member this.LavaNode = node
+
+    [<Command("!stop", RunMode = RunMode.Async); Summary("Stops playing audio")>]
+    member public x.stop() : Task =
+        task {
+            do!
+                match node.HasPlayer(x.Context.Guild) with
+                | true -> node.GetPlayer(x.Context.Guild).StopAsync()
+                | false -> Task.CompletedTask
+        }
+
+    [<Command("!leave", RunMode = RunMode.Async); Summary("Leaves current voice channel")>]
+    member public x.leaveVoiceChannel() : Task =
+        task {
+            do!
+                match node.HasPlayer(x.Context.Guild) with
+                | true ->
+                    let lavaPlayer =
+                        node.GetPlayer(x.Context.Guild)
+
+                    let voiceChannel = lavaPlayer.VoiceChannel
+                    node.LeaveAsync(voiceChannel)
+                | false -> Task.CompletedTask
+        }
+
+    [<Command("!sound", RunMode = RunMode.Async); Summary("Plays a sound clip from the soundboard.")>]
+    member public x.playSound([<Remainder; Summary("The name of the sound clip")>] clipName: string) : Task =
+        playAudio x.Context SearchType.Direct clipName
+
     [<Command("!yt", RunMode = RunMode.Async); Summary("Plays an audio track from youtube")>]
     member public x.playYoutube([<Remainder; Summary("The search query to run on YouTube")>] clipName: string) : Task =
-        task {
-            printfn $"play sound clip %s{clipName.ToString()}"
-
-            let guildUser: IVoiceState =
-                downcast x.Context.User
-
-            let voiceChannel = guildUser.VoiceChannel
-
-            let! results = node.SearchAsync(SearchType.YouTube, clipName)
-
-            let! player =
-                match node.HasPlayer(x.Context.Guild) with
-                | true -> Task.FromResult(node.GetPlayer(x.Context.Guild))
-                | false -> node.JoinAsync(voiceChannel)
-
-            let playSound () =
-                player.PlayAsync(Seq.head results.Tracks)
-
-            let playerPlayerState = player.PlayerState
-
-            let play: Task =
-                match playerPlayerState with
-                | PlayerState.Playing -> Task.CompletedTask
-                | PlayerState.None -> playSound ()
-                | PlayerState.Stopped -> playSound ()
-                | PlayerState.Paused -> playSound ()
-                | _ -> Task.CompletedTask
-
-            let p = Task.Run(fun x -> play)
-
-            do! player.ApplyFilterAsync(VolumeFilter(), volume = 0.01)
-            return p
-        }
+        playAudio x.Context SearchType.YouTube clipName
 
 let log =
     Func<LogMessage, Task>(fun message -> task { printfn $"%s{message.ToString()}" })
