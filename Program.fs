@@ -39,14 +39,18 @@ type SoundModule(node: LavaNode) =
 
     let node = node
 
-    let playAudio (context: ICommandContext) searchType soundName =
+    let playAudio (context: ICommandContext) searchType query =
         task {
             let guildUser: IVoiceState =
                 downcast context.User
 
             let voiceChannel = guildUser.VoiceChannel
 
-            let! results = node.SearchAsync(searchType, $"assets/%s{soundName}.ogg")
+            let! results =
+                match searchType with
+                | SearchType.Direct -> node.SearchAsync(searchType, $"assets/%s{query}.ogg")
+                | SearchType.YouTube -> node.SearchAsync(searchType, query)
+                | _ -> failwith "todo"
 
             let channel = context.Guild
 
@@ -69,7 +73,17 @@ type SoundModule(node: LavaNode) =
                 | false -> node.JoinAsync(voiceChannel)
 
             let playSound () =
-                player.PlayAsync(Seq.head results.Tracks)
+                match searchType with
+                | SearchType.Direct -> player.PlayAsync(Seq.head results.Tracks)
+                | SearchType.YouTube ->
+                    let p =
+                        Task.Run(fun x -> player.PlayAsync(Seq.head results.Tracks))
+
+                    let _ =
+                        player.ApplyFilterAsync(VolumeFilter(), volume = 0.01)
+
+                    p
+                | _ -> failwith "unsupported search type"
 
             let playerPlayerState = player.PlayerState
 
@@ -104,6 +118,20 @@ type SoundModule(node: LavaNode) =
 
                     let voiceChannel = lavaPlayer.VoiceChannel
                     node.LeaveAsync(voiceChannel)
+                | false -> Task.CompletedTask
+        }
+
+    [<Command("!volume", RunMode = RunMode.Async); Summary("Sets the volume")>]
+    member public x.setVolume([<Remainder; Summary("volume level")>] volume: string) : Task =
+        task {
+            do!
+                match node.HasPlayer(x.Context.Guild) with
+                | true ->
+                    let newVolume = Convert.ToDouble(volume)
+
+                    node
+                        .GetPlayer(x.Context.Guild)
+                        .ApplyFilterAsync(VolumeFilter(), volume = newVolume)
                 | false -> Task.CompletedTask
         }
 
@@ -187,11 +215,13 @@ let main argv =
 
     let client = new DiscordSocketClient(config)
 
+
     let services =
         ServiceCollection()
             .AddSingleton<DiscordSocketClient>(client)
-            .AddSingleton<LavaNode>()
-            .AddSingleton<LavaConfig>(LavaConfig(Authorization = "password"))
+            .AddLavaNode(fun config ->
+                config.Authorization <- "password"
+                config.SelfDeaf <- false)
             .AddSingleton<SoundModule>()
 
     let provider =
