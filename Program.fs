@@ -1,4 +1,5 @@
 ﻿open System.Text
+open Discord.Interactions
 open Microsoft.Extensions.DependencyInjection
 open Discord
 open Discord.WebSocket
@@ -18,83 +19,150 @@ let token =
 let lavalinkDirectory =
     "/Users/joel/code/java/Lavalink"
 
+let soundsDirectory =
+    $"{lavalinkDirectory}/assets/"
+
+let getClipNames =
+    Directory.GetFiles(soundsDirectory)
+    |> Seq.take 25
+    |> Seq.map (fun f -> f.Replace(".ogg", "").Replace(soundsDirectory, ""))
+
+let guildId = 936284007514120192UL // 969319618483216444UL
+
 type VolumeFilter() =
     interface IFilter
+
+
+type UnionContext =
+    struct
+        val user: IUser
+        val guild: IGuild
+        new(user: IUser, guild: IGuild) = { user = user; guild = guild }
+
+        new(context: ICommandContext) =
+            { user = context.User
+              guild = context.Guild }
+
+        new(context: IInteractionContext) =
+            { user = context.User
+              guild = context.Guild }
+    end
+
+let volume searchType =
+    match searchType with
+    | SearchType.Direct -> 1.0
+    | SearchType.YouTube -> 0.01
+    | _ -> failwith "unsupported search type"
+
+let playAudio (context: UnionContext) (node: LavaNode) searchType query =
+    task {
+        let guildUser: IVoiceState =
+            downcast context.user
+
+        let voiceChannel = guildUser.VoiceChannel
+
+        let! results =
+            match searchType with
+            | SearchType.Direct -> node.SearchAsync(searchType, $"assets/%s{query}.ogg")
+            | SearchType.YouTube -> node.SearchAsync(searchType, query)
+            | _ -> failwith "todo"
+
+        let channel = context.guild
+
+        let! player =
+            match node.HasPlayer(channel) with
+            | true ->
+                let lavaPlayer = node.GetPlayer(channel)
+
+                let newPlayer =
+                    if lavaPlayer.VoiceChannel = voiceChannel then
+                        Task.FromResult(lavaPlayer)
+                    else
+                        node.LeaveAsync(lavaPlayer.VoiceChannel)
+                        |> Async.AwaitTask
+                        |> Async.RunSynchronously
+
+                        node.JoinAsync(voiceChannel)
+
+                newPlayer
+            | false -> node.JoinAsync(voiceChannel)
+
+        let playSound =
+            task {
+
+                let p =
+                    player.PlayAsync(Seq.head results.Tracks)
+
+                do! Task.Delay(500)
+                do! player.ApplyFilterAsync(VolumeFilter(), volume searchType)
+                return p
+            }
+
+        let playerPlayerState = player.PlayerState
+
+        do!
+            match playerPlayerState with
+            | PlayerState.Playing -> Task.CompletedTask
+            | PlayerState.None -> playSound
+            | PlayerState.Stopped -> playSound
+            | PlayerState.Paused -> playSound
+            | _ -> Task.CompletedTask
+    }
+
 
 type TextModule() =
     inherit ModuleBase<SocketCommandContext>()
 
     [<Command("!sounds", RunMode = RunMode.Async); Summary("List available sounds from sound board.")>]
     member public x.listSounds() : Task =
-        let stringBuilder =
-            Directory.GetFiles($"%s{lavalinkDirectory}/assets")
-            |> Seq.map (fun f -> f.Replace($"%s{lavalinkDirectory}/assets/", ""))
-            |> Seq.map (fun f -> f.Replace(".ogg", ""))
-            |> Seq.fold (fun (acc: StringBuilder) -> acc.AppendLine) (StringBuilder())
+        getClipNames
+        |> Seq.fold (fun (acc: StringBuilder) -> acc.AppendLine) (StringBuilder())
+        |> fun m -> x.Context.Message.ReplyAsync($"Played clip {m.ToString()}")
 
-        x.Context.Message.ReplyAsync(stringBuilder.ToString())
+type SoundClipAutoCompleteHandler() =
+    inherit AutocompleteHandler()
+
+    override x.GenerateSuggestionsAsync(context, _, _, _) : Task<AutocompletionResult> =
+        task {
+            let autoCompleteContext: SocketAutocompleteInteraction =
+                downcast context.Interaction
+
+            let userInput =
+                autoCompleteContext.Data.Current.Value.ToString()
+
+            return
+                getClipNames
+                |> Seq.sort
+                |> Seq.where (fun c -> c.StartsWith userInput)
+                |> Seq.map (fun c ->
+                    let truncated =
+                        c.Substring(0, min 31 c.Length) in AutocompleteResult(truncated, c))
+                |> Seq.truncate 25
+                |> Seq.toArray
+                |> AutocompletionResult.FromSuccess
+        }
+
+type InteractionSoundModule(node: LavaNode) =
+    inherit InteractionModuleBase()
+
+    [<SlashCommand("sound", "play sound clip from soundboard", true, Discord.Interactions.RunMode.Async)>]
+    member public x.sound
+        ([<Summary("ClipName"); Autocomplete(typeof<SoundClipAutoCompleteHandler>)>] clipName: string)
+        : Task =
+        task {
+            let _ =
+                try
+                    playAudio (UnionContext(x.Context)) node SearchType.Direct clipName
+                    |> Async.AwaitTask
+                    |> Async.RunSynchronously
+                with
+                | e -> printfn $"{e.Message}"
+
+            return x.Context.Interaction.RespondAsync $"Played clip {clipName}"
+        }
 
 type SoundModule(node: LavaNode) =
     inherit ModuleBase<ICommandContext>()
-
-    let node = node
-
-    let playAudio (context: ICommandContext) searchType query =
-        task {
-            let guildUser: IVoiceState =
-                downcast context.User
-
-            let voiceChannel = guildUser.VoiceChannel
-
-            let! results =
-                match searchType with
-                | SearchType.Direct -> node.SearchAsync(searchType, $"assets/%s{query}.ogg")
-                | SearchType.YouTube -> node.SearchAsync(searchType, query)
-                | _ -> failwith "todo"
-
-            let channel = context.Guild
-
-            let! player =
-                match node.HasPlayer(channel) with
-                | true ->
-                    let lavaPlayer = node.GetPlayer(channel)
-
-                    let newPlayer =
-                        if lavaPlayer.VoiceChannel = voiceChannel then
-                            Task.FromResult(lavaPlayer)
-                        else
-                            node.LeaveAsync(lavaPlayer.VoiceChannel)
-                            |> Async.AwaitTask
-                            |> Async.RunSynchronously
-
-                            node.JoinAsync(voiceChannel)
-
-                    newPlayer
-                | false -> node.JoinAsync(voiceChannel)
-
-            let playSound () =
-                match searchType with
-                | SearchType.Direct -> player.PlayAsync(Seq.head results.Tracks)
-                | SearchType.YouTube ->
-                    let p =
-                        Task.Run(fun x -> player.PlayAsync(Seq.head results.Tracks))
-
-                    let _ =
-                        player.ApplyFilterAsync(VolumeFilter(), volume = 0.01)
-
-                    p
-                | _ -> failwith "unsupported search type"
-
-            let playerPlayerState = player.PlayerState
-
-            do!
-                match playerPlayerState with
-                | PlayerState.Playing -> Task.CompletedTask
-                | PlayerState.None -> playSound ()
-                | PlayerState.Stopped -> playSound ()
-                | PlayerState.Paused -> playSound ()
-                | _ -> Task.CompletedTask
-        }
 
     member this.LavaNode = node
 
@@ -137,34 +205,37 @@ type SoundModule(node: LavaNode) =
 
     [<Command("!sound", RunMode = RunMode.Async); Summary("Plays a sound clip from the soundboard.")>]
     member public x.playSound([<Remainder; Summary("The name of the sound clip")>] clipName: string) : Task =
-        playAudio x.Context SearchType.Direct clipName
+
+        playAudio (UnionContext(x.Context)) node SearchType.Direct clipName
 
     [<Command("!yt", RunMode = RunMode.Async); Summary("Plays an audio track from youtube")>]
     member public x.playYoutube([<Remainder; Summary("The search query to run on YouTube")>] clipName: string) : Task =
-        playAudio x.Context SearchType.YouTube clipName
+        playAudio (UnionContext(x.Context)) node SearchType.YouTube clipName
 
 let log =
     Func<LogMessage, Task>(fun message -> task { printfn $"%s{message.ToString()}" })
 
-type CommandHandler(client: DiscordSocketClient, commandsService: CommandService, servicesProvider: IServiceProvider) =
+type CommandHandler
+    (
+        client: DiscordSocketClient,
+        commandsService: CommandService,
+        interactionsService: InteractionService,
+        servicesProvider: IServiceProvider
+    ) =
     let lavaNode: LavaNode =
         servicesProvider.GetRequiredService()
 
     let handleCommandAsync =
         Func<SocketMessage, Task> (fun messageParam ->
             task {
-                printfn "Received some message"
-
                 let message: SocketUserMessage =
                     downcast messageParam
 
-                let argPos = 0
-
                 let startsWithBang =
-                    message.HasCharPrefix('!', ref argPos)
+                    message.HasCharPrefix('!', ref 0)
 
                 let isMention =
-                    message.HasMentionPrefix((client.CurrentUser, ref argPos))
+                    message.HasMentionPrefix((client.CurrentUser, ref 0))
 
                 let isAuthorBot = message.Author.IsBot
 
@@ -181,7 +252,7 @@ type CommandHandler(client: DiscordSocketClient, commandsService: CommandService
                         SocketCommandContext(client, message)
 
                     let! result =
-                        commandsService.ExecuteAsync(context = context, argPos = argPos, services = servicesProvider)
+                        commandsService.ExecuteAsync(context = context, argPos = 0, services = servicesProvider)
 
                     match result with
                     | result when (not result.IsSuccess) -> printfn $"Error %s{result.ErrorReason}"
@@ -189,9 +260,50 @@ type CommandHandler(client: DiscordSocketClient, commandsService: CommandService
                 | false -> ()
             })
 
-    let onReadyAsync =
+    let handleUserSlashCommandAsync =
+        Func<SocketSlashCommand, Task> (fun messageParam ->
+            task {
+                let shouldHandleCommand =
+                    messageParam.User.Username <> "Vaub"
+
+                match shouldHandleCommand with
+                | true ->
+                    let context =
+                        InteractionContext(client, messageParam)
+
+                    let! result =
+                        interactionsService.ExecuteCommandAsync(context = context, services = servicesProvider)
+
+                    match result with
+                    | result when (not result.IsSuccess) -> printfn $"Error %s{result.ErrorReason}"
+                    | _ -> ()
+                | false -> ()
+            })
+
+    let handleAutoCompleteAsync =
+        Func<SocketAutocompleteInteraction, Task> (fun messageParam ->
+            task {
+                let shouldHandleCommand = true
+
+                match shouldHandleCommand with
+                | true ->
+                    let context =
+                        InteractionContext(client, messageParam)
+
+                    let! result =
+                        interactionsService.ExecuteCommandAsync(context = context, services = servicesProvider)
+
+                    match result with
+                    | result when (not result.IsSuccess) -> printfn $"Error %s{result.ErrorReason}"
+                    | _ -> ()
+                | false -> ()
+            })
+
+    member x.onReadyAsync =
         Func<Task> (fun messageParam ->
             task {
+                let! _ = interactionsService.RegisterCommandsToGuildAsync(guildId, true)
+
                 match lavaNode.IsConnected with
                 | true -> ()
                 | false -> do! lavaNode.ConnectAsync()
@@ -199,12 +311,20 @@ type CommandHandler(client: DiscordSocketClient, commandsService: CommandService
 
     member x.installCommandsAsync(services: IServiceProvider) =
         task {
-            printfn "Installing commands async"
             client.add_MessageReceived handleCommandAsync
 
-            client.add_Ready onReadyAsync
-
             let! _ = commandsService.AddModulesAsync(assembly = Assembly.GetEntryAssembly(), services = services)
+
+            ()
+        }
+
+    member x.installInteractionsAsync(services: IServiceProvider) =
+        task {
+            client.add_AutocompleteExecuted handleAutoCompleteAsync
+            client.add_SlashCommandExecuted handleUserSlashCommandAsync
+
+            let! _ = interactionsService.AddModulesAsync(assembly = Assembly.GetEntryAssembly(), services = services)
+
             ()
         }
 
@@ -215,30 +335,36 @@ let main argv =
 
     let client = new DiscordSocketClient(config)
 
-
     let services =
         ServiceCollection()
             .AddSingleton<DiscordSocketClient>(client)
             .AddLavaNode(fun config ->
                 config.Authorization <- "password"
                 config.SelfDeaf <- false)
+            .AddSingleton<SoundClipAutoCompleteHandler>()
             .AddSingleton<SoundModule>()
+            .AddSingleton<InteractionSoundModule>()
 
     let provider =
         services.BuildServiceProvider()
 
     let commandService = new CommandService()
 
+    let interactionService =
+        new InteractionService(client)
+
     let commandHandler =
-        CommandHandler(client, commandService, provider)
+        CommandHandler(client, commandService, interactionService, provider)
 
     task {
         do! client.LoginAsync(tokenType = TokenType.Bot, token = token)
         do! client.StartAsync()
 
         client.add_Log log
+        client.add_Ready commandHandler.onReadyAsync
 
         do! commandHandler.installCommandsAsync provider
+        do! commandHandler.installInteractionsAsync provider
 
         client.add_Ready (fun () ->
             printfn "%s" "Bot is connected"
