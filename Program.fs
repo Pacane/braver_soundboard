@@ -24,14 +24,20 @@ let soundsDirectory =
 
 let getClipNames =
     Directory.GetFiles(soundsDirectory)
-    |> Seq.take 25
     |> Seq.map (fun f -> f.Replace(".ogg", "").Replace(soundsDirectory, ""))
+
+let bannedUsers = [ "Vaub" ]
+
+let isUserBanned user =
+    bannedUsers |> Seq.exists (fun u -> u = user)
 
 let guildId = 936284007514120192UL // 969319618483216444UL
 
+let maxCommandNameLength = 32
+let maxNumberOfSuggestions = 25
+
 type VolumeFilter() =
     interface IFilter
-
 
 type UnionContext =
     struct
@@ -109,7 +115,6 @@ let playAudio (context: UnionContext) (node: LavaNode) searchType query =
             | _ -> Task.CompletedTask
     }
 
-
 type TextModule() =
     inherit ModuleBase<SocketCommandContext>()
 
@@ -136,8 +141,8 @@ type SoundClipAutoCompleteHandler() =
                 |> Seq.where (fun c -> c.StartsWith userInput)
                 |> Seq.map (fun c ->
                     let truncated =
-                        c.Substring(0, min 31 c.Length) in AutocompleteResult(truncated, c))
-                |> Seq.truncate 25
+                        c.Substring(0, min maxCommandNameLength c.Length) in AutocompleteResult(truncated, c))
+                |> Seq.truncate maxNumberOfSuggestions
                 |> Seq.toArray
                 |> AutocompletionResult.FromSuccess
         }
@@ -239,12 +244,12 @@ type CommandHandler
 
                 let isAuthorBot = message.Author.IsBot
 
-                let isAuthorVincent =
-                    message.Author.Username = "Vaub"
+                let isBannedUser =
+                    isUserBanned message.Author.Username
 
                 let shouldHandleCommand =
                     not (not startsWithBang || isMention || isAuthorBot)
-                    && not isAuthorVincent
+                    && not isBannedUser
 
                 match shouldHandleCommand with
                 | true ->
@@ -264,7 +269,7 @@ type CommandHandler
         Func<SocketSlashCommand, Task> (fun messageParam ->
             task {
                 let shouldHandleCommand =
-                    messageParam.User.Username <> "Vaub"
+                    not (isUserBanned messageParam.User.Username)
 
                 match shouldHandleCommand with
                 | true ->
@@ -313,8 +318,7 @@ type CommandHandler
         task {
             client.add_MessageReceived handleCommandAsync
 
-            let! _ = commandsService.AddModulesAsync(assembly = Assembly.GetEntryAssembly(), services = services)
-
+            let! r = commandsService.AddModulesAsync(assembly = Assembly.GetEntryAssembly(), services = services)
             ()
         }
 
