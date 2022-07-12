@@ -307,7 +307,7 @@ type CommandHandler
     member x.onReadyAsync =
         Func<Task> (fun messageParam ->
             task {
-                let! _ = interactionsService.RegisterCommandsToGuildAsync(guildId, true)
+                let! r = interactionsService.RegisterCommandsToGuildAsync(guildId, true)
 
                 match lavaNode.IsConnected with
                 | true -> ()
