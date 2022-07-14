@@ -16,22 +16,19 @@ open Victoria.Responses.Search
 let token =
     "OTY5NzU5MjAyMjA3NzU2Mzg4.GRtGnq.iDyI8fd50RxUtkwAMI6h_E3jrRkzPWSv8lEvB8"
 
-let lavalinkDirectory =
-    "/Users/joel/code/java/Lavalink"
-
-let soundsDirectory =
-    $"{lavalinkDirectory}/assets/"
+let soundsDirectory = "/assets/"
 
 let getClipNames =
-    Directory.GetFiles(soundsDirectory)
-    |> Seq.map (fun f -> f.Replace(".ogg", "").Replace(soundsDirectory, ""))
+    File.ReadAllLines("/assets.txt")
+    |> Seq.map (fun f -> f.Replace(".ogg", ""))
 
 let bannedUsers = [ "Vaub" ]
 
 let isUserBanned user =
     bannedUsers |> Seq.exists (fun u -> u = user)
 
-let guildId = 936284007514120192UL // 969319618483216444UL
+let guildId = 969319618483216444UL
+//let guildId = 936284007514120192UL
 
 let maxCommandNameLength = 32
 let maxNumberOfSuggestions = 25
@@ -69,7 +66,7 @@ let playAudio (context: UnionContext) (node: LavaNode) searchType query =
 
         let! results =
             match searchType with
-            | SearchType.Direct -> node.SearchAsync(searchType, $"assets/%s{query}.ogg")
+            | SearchType.Direct -> node.SearchAsync(searchType, $"/assets/%s{query}.ogg")
             | SearchType.YouTube -> node.SearchAsync(searchType, query)
             | _ -> failwith "todo"
 
@@ -95,7 +92,6 @@ let playAudio (context: UnionContext) (node: LavaNode) searchType query =
 
         let playSound =
             task {
-
                 let p =
                     player.PlayAsync(Seq.head results.Tracks)
 
@@ -115,15 +111,6 @@ let playAudio (context: UnionContext) (node: LavaNode) searchType query =
             | _ -> Task.CompletedTask
     }
 
-type TextModule() =
-    inherit ModuleBase<SocketCommandContext>()
-
-    [<Command("!sounds", RunMode = RunMode.Async); Summary("List available sounds from sound board.")>]
-    member public x.listSounds() : Task =
-        getClipNames
-        |> Seq.fold (fun (acc: StringBuilder) -> acc.AppendLine) (StringBuilder())
-        |> fun m -> x.Context.Message.ReplyAsync($"Played clip {m.ToString()}")
-
 type SoundClipAutoCompleteHandler() =
     inherit AutocompleteHandler()
 
@@ -141,7 +128,9 @@ type SoundClipAutoCompleteHandler() =
                 |> Seq.where (fun c -> c.StartsWith userInput)
                 |> Seq.map (fun c ->
                     let truncated =
-                        c.Substring(0, min maxCommandNameLength c.Length) in AutocompleteResult(truncated, c))
+                        c.Substring(0, min maxCommandNameLength c.Length) in
+
+                    AutocompleteResult(truncated, c))
                 |> Seq.truncate maxNumberOfSuggestions
                 |> Seq.toArray
                 |> AutocompletionResult.FromSuccess
@@ -149,6 +138,21 @@ type SoundClipAutoCompleteHandler() =
 
 type InteractionSoundModule(node: LavaNode) =
     inherit InteractionModuleBase()
+
+    [<SlashCommand("sounds",
+                   "List all available sound clips of the soundboard.",
+                   true,
+                   Discord.Interactions.RunMode.Async)>]
+    member public x.sounds() : Task =
+        task {
+            let clips =
+                getClipNames
+                |> Seq.fold (fun (acc: StringBuilder) -> acc.AppendLine) (StringBuilder())
+            
+            printfn $"Got {getClipNames |> Seq.length} clips."
+
+            return x.Context.Interaction.RespondAsync(clips.ToString())
+        }
 
     [<SlashCommand("sound", "play sound clip from soundboard", true, Discord.Interactions.RunMode.Async)>]
     member public x.sound
@@ -210,7 +214,6 @@ type SoundModule(node: LavaNode) =
 
     [<Command("!sound", RunMode = RunMode.Async); Summary("Plays a sound clip from the soundboard.")>]
     member public x.playSound([<Remainder; Summary("The name of the sound clip")>] clipName: string) : Task =
-
         playAudio (UnionContext(x.Context)) node SearchType.Direct clipName
 
     [<Command("!yt", RunMode = RunMode.Async); Summary("Plays an audio track from youtube")>]
@@ -343,7 +346,13 @@ let main argv =
         ServiceCollection()
             .AddSingleton<DiscordSocketClient>(client)
             .AddLavaNode(fun config ->
-                config.Authorization <- "password"
+                config.Hostname <- Environment.GetEnvironmentVariable "LAVALINK_SVC_SERVICE_HOST"
+
+                config.Port <-
+                    Environment.GetEnvironmentVariable "LAVALINK_SVC_SERVICE_PORT"
+                    |> UInt16.Parse
+
+                config.Authorization <- Environment.GetEnvironmentVariable "LAVALINK_SERVER_PASSWORD"
                 config.SelfDeaf <- false)
             .AddSingleton<SoundClipAutoCompleteHandler>()
             .AddSingleton<SoundModule>()

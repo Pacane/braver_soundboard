@@ -1,0 +1,147 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot-dpl
+  labels:
+    app: bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bot
+  template:
+    metadata:
+      labels:
+        app: bot
+    spec:
+      containers:
+        - name: bot
+          image: northamerica-northeast1-docker.pkg.dev/stacktrace-295302/pacane/braver-bot
+          imagePullPolicy: Always
+          env:
+            - name: LAVALINK_SERVER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lavalink-pw
+                  key: password
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: lavalink-config
+                  key: server_port
+          
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lavalink-dpl
+  labels:
+    app: bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lavalink
+  template:
+    metadata:
+      labels:
+        app: lavalink
+    spec:
+      containers:
+        - name: lavalink
+          image: northamerica-northeast1-docker.pkg.dev/stacktrace-295302/pacane/lavalink:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 2333
+          env:
+            - name: LAVALINK_SERVER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lavalink-pw
+                  key: password
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: lavalink-config
+                  key: server_port
+            - name: LAVALINK_SERVER_SOURCES_YOUTUBE
+              valueFrom:
+                configMapKeyRef:
+                  name: lavalink-config
+                  key: youtube_sources
+            - name: LAVALINK_SERVER_SOURCES_BANDCAMP
+              valueFrom:
+                configMapKeyRef:
+                  name: lavalink-config
+                  key: bandcamp_sources
+            - name: LAVALINK_SERVER_SOURCES_SOUNDCLOUD
+              valueFrom:
+                configMapKeyRef:
+                  name: lavalink-config
+                  key: soundcloud_sources
+            - name: LAVALINK_SERVER_SOURCES_TWITCH
+              valueFrom:
+                configMapKeyRef:
+                  name: lavalink-config
+                  key: twitch_sources
+            - name: LAVALINK_SERVER_SOURCES_VIMEO
+              valueFrom:
+                configMapKeyRef:
+                  name: lavalink-config
+                  key: vimeo_sources
+            - name: LAVALINK_SERVER_SOURCES_HTTP
+              valueFrom:
+                configMapKeyRef:
+                  name: lavalink-config
+                  key: http_sources
+            - name: LAVALINK_SERVER_SOURCES_LOCAL
+              valueFrom:
+                configMapKeyRef:
+                  name: lavalink-config
+                  key: local_sources
+            - name: LAVALINK_SERVER_YOUTUBE_PLAYLIST_LOAD_LIMIT
+              valueFrom:
+                configMapKeyRef:
+                  name: lavalink-config
+                  key: youtube_playlist_limit
+            - name: LAVALINK_SERVER_YOUTUBE_SEARCH_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: lavalink-config
+                  key: youtube_search
+            - name: LAVALINK_SERVER_SOUNDCLOUD_SEARCH_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: lavalink-config
+                  key: soundcloud_search
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lavalink-config
+data:
+  server_port: "2333"
+  server_address: "0.0.0.0"
+  youtube_sources: "true"
+  bandcamp_sources: "true"
+  soundcloud_sources: "true"
+  twitch_sources: "false"
+  vimeo_sources: "false"
+  http_sources: "true"
+  local_sources: "true"
+  youtube_playlist_limit: "6"
+  player_update_interval: "5"
+  youtube_search: "true"
+  soundcloud_search: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lavalink-svc
+spec:
+  selector:
+    app: lavalink
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 2333
