@@ -13,10 +13,7 @@ open Victoria.Enums
 open Victoria.Filters
 open Victoria.Responses.Search
 
-let token =
-    "OTY5NzU5MjAyMjA3NzU2Mzg4.GRtGnq.iDyI8fd50RxUtkwAMI6h_E3jrRkzPWSv8lEvB8"
-
-let soundsDirectory = "/assets/"
+let token = Environment.GetEnvironmentVariable "BOT_TOKEN"
 
 let getClipNames =
     File.ReadAllLines("/assets.txt")
@@ -26,9 +23,6 @@ let bannedUsers = [ "Vaub" ]
 
 let isUserBanned user =
     bannedUsers |> Seq.exists (fun u -> u = user)
-
-let guildId = 969319618483216444UL
-//let guildId = 936284007514120192UL
 
 let maxCommandNameLength = 32
 let maxNumberOfSuggestions = 25
@@ -51,6 +45,10 @@ type UnionContext =
               guild = context.Guild }
     end
 
+type Result<'T> =
+    | Success of 'T
+    | Failure of Exception
+
 let volume searchType =
     match searchType with
     | SearchType.Direct -> 1.0
@@ -59,8 +57,7 @@ let volume searchType =
 
 let playAudio (context: UnionContext) (node: LavaNode) searchType query =
     task {
-        let guildUser: IVoiceState =
-            downcast context.user
+        let guildUser: IVoiceState = downcast context.user
 
         let voiceChannel = guildUser.VoiceChannel
 
@@ -92,8 +89,7 @@ let playAudio (context: UnionContext) (node: LavaNode) searchType query =
 
         let playSound =
             task {
-                let p =
-                    player.PlayAsync(Seq.head results.Tracks)
+                let p = player.PlayAsync(Seq.head results.Tracks)
 
                 do! Task.Delay(500)
                 do! player.ApplyFilterAsync(VolumeFilter(), volume searchType)
@@ -119,16 +115,14 @@ type SoundClipAutoCompleteHandler() =
             let autoCompleteContext: SocketAutocompleteInteraction =
                 downcast context.Interaction
 
-            let userInput =
-                autoCompleteContext.Data.Current.Value.ToString()
+            let userInput = autoCompleteContext.Data.Current.Value.ToString()
 
             return
                 getClipNames
                 |> Seq.sort
                 |> Seq.where (fun c -> c.StartsWith userInput)
                 |> Seq.map (fun c ->
-                    let truncated =
-                        c.Substring(0, min maxCommandNameLength c.Length) in
+                    let truncated = c.Substring(0, min maxCommandNameLength c.Length)
 
                     AutocompleteResult(truncated, c))
                 |> Seq.truncate maxNumberOfSuggestions
@@ -148,8 +142,6 @@ type InteractionSoundModule(node: LavaNode) =
             let clips =
                 getClipNames
                 |> Seq.fold (fun (acc: StringBuilder) -> acc.AppendLine) (StringBuilder())
-            
-            printfn $"Got {getClipNames |> Seq.length} clips."
 
             return x.Context.Interaction.RespondAsync(clips.ToString())
         }
@@ -190,8 +182,7 @@ type SoundModule(node: LavaNode) =
             do!
                 match node.HasPlayer(x.Context.Guild) with
                 | true ->
-                    let lavaPlayer =
-                        node.GetPlayer(x.Context.Guild)
+                    let lavaPlayer = node.GetPlayer(x.Context.Guild)
 
                     let voiceChannel = lavaPlayer.VoiceChannel
                     node.LeaveAsync(voiceChannel)
@@ -230,25 +221,20 @@ type CommandHandler
         interactionsService: InteractionService,
         servicesProvider: IServiceProvider
     ) =
-    let lavaNode: LavaNode =
-        servicesProvider.GetRequiredService()
+    let lavaNode: LavaNode = servicesProvider.GetRequiredService()
 
     let handleCommandAsync =
         Func<SocketMessage, Task> (fun messageParam ->
             task {
-                let message: SocketUserMessage =
-                    downcast messageParam
+                let message: SocketUserMessage = downcast messageParam
 
-                let startsWithBang =
-                    message.HasCharPrefix('!', ref 0)
+                let startsWithBang = message.HasCharPrefix('!', ref 0)
 
-                let isMention =
-                    message.HasMentionPrefix((client.CurrentUser, ref 0))
+                let isMention = message.HasMentionPrefix((client.CurrentUser, ref 0))
 
                 let isAuthorBot = message.Author.IsBot
 
-                let isBannedUser =
-                    isUserBanned message.Author.Username
+                let isBannedUser = isUserBanned message.Author.Username
 
                 let shouldHandleCommand =
                     not (not startsWithBang || isMention || isAuthorBot)
@@ -256,8 +242,7 @@ type CommandHandler
 
                 match shouldHandleCommand with
                 | true ->
-                    let context =
-                        SocketCommandContext(client, message)
+                    let context = SocketCommandContext(client, message)
 
                     let! result =
                         commandsService.ExecuteAsync(context = context, argPos = 0, services = servicesProvider)
@@ -271,13 +256,11 @@ type CommandHandler
     let handleUserSlashCommandAsync =
         Func<SocketSlashCommand, Task> (fun messageParam ->
             task {
-                let shouldHandleCommand =
-                    not (isUserBanned messageParam.User.Username)
+                let shouldHandleCommand = not (isUserBanned messageParam.User.Username)
 
                 match shouldHandleCommand with
                 | true ->
-                    let context =
-                        InteractionContext(client, messageParam)
+                    let context = InteractionContext(client, messageParam)
 
                     let! result =
                         interactionsService.ExecuteCommandAsync(context = context, services = servicesProvider)
@@ -295,8 +278,7 @@ type CommandHandler
 
                 match shouldHandleCommand with
                 | true ->
-                    let context =
-                        InteractionContext(client, messageParam)
+                    let context = InteractionContext(client, messageParam)
 
                     let! result =
                         interactionsService.ExecuteCommandAsync(context = context, services = servicesProvider)
@@ -310,7 +292,13 @@ type CommandHandler
     member x.onReadyAsync =
         Func<Task> (fun messageParam ->
             task {
-                let! r = interactionsService.RegisterCommandsToGuildAsync(guildId, true)
+                try
+                    let! _ = interactionsService.RegisterCommandsGloballyAsync(true)
+                    ()
+                with
+                | e ->
+                    printfn "Got an error"
+                    raise e
 
                 match lavaNode.IsConnected with
                 | true -> ()
@@ -337,8 +325,7 @@ type CommandHandler
 
 [<EntryPoint>]
 let main argv =
-    let config =
-        DiscordSocketConfig(MessageCacheSize = 100)
+    let config = DiscordSocketConfig(MessageCacheSize = 100)
 
     let client = new DiscordSocketClient(config)
 
@@ -358,13 +345,11 @@ let main argv =
             .AddSingleton<SoundModule>()
             .AddSingleton<InteractionSoundModule>()
 
-    let provider =
-        services.BuildServiceProvider()
+    let provider = services.BuildServiceProvider()
 
     let commandService = new CommandService()
 
-    let interactionService =
-        new InteractionService(client)
+    let interactionService = new InteractionService(client)
 
     let commandHandler =
         CommandHandler(client, commandService, interactionService, provider)

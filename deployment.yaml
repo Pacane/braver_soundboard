@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: bot
-          image: northamerica-northeast1-docker.pkg.dev/stacktrace-295302/pacane/braver-bot
+          image: northamerica-northeast1-docker.pkg.dev/stacktrace-295302/pacane/braver-bot:latest-amd64
           imagePullPolicy: Always
           env:
             - name: LAVALINK_SERVER_PASSWORD
@@ -54,6 +54,11 @@ spec:
           ports:
             - containerPort: 2333
           env:
+            - name: BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bot-token
+                  key: token
             - name: LAVALINK_SERVER_PASSWORD
               valueFrom:
                 secretKeyRef:
